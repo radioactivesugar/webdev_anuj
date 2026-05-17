@@ -10,7 +10,7 @@
         #canvas-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; }
         .section { position: relative; height: 100vh; display: flex; align-items: center; padding: 0 10%; z-index: 2; pointer-events: none; }
         .content { max-width: 350px; background: rgba(5, 5, 15, 0.7); padding: 25px; border-radius: 12px; backdrop-filter: blur(8px); }
-        .lil-gui { --background-color: rgba(15, 15, 25, 0.95); --text-color: #fff; z-index: 100 !important; width: 320px; }
+        .lil-gui { --background-color: rgba(15, 15, 25, 0.95); --text-color: #fff; z-index: 100 !important; width: 340px; }
     </style>
 </head>
 <body>
@@ -50,7 +50,9 @@
         container.appendChild(renderer.domElement);
 
         // Lights
-        scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
+
         const neonLight = new THREE.DirectionalLight(0x00ffcc, 2.5);
         neonLight.position.set(5, 10, 2);
         scene.add(neonLight);
@@ -74,8 +76,29 @@
 
         const cameraTarget = new THREE.Vector3(0, 0, 0);
 
-        // 3. GUI Config Object (Fixes missing values by creating direct state tracking)
+        // 3. GUI Config Object & Export Action
         const gui = new lil.GUI({ title: 'Scene Controller' });
+
+        const exporter = {
+            copyToClipboard: function() {
+                const configData = {
+                    camera: { position: { x: camera.position.x, y: camera.position.y, z: camera.position.z }, target: { x: cameraTarget.x, y: cameraTarget.y, z: cameraTarget.z } },
+                    lighting: { ambientIntensity: ambientLight.intensity, neonIntensity: neonLight.intensity, neonPosition: { x: neonLight.position.x, y: neonLight.position.y, z: neonLight.position.z } },
+                    object1: { position: { x: obj1.position.x, y: obj1.position.y, z: obj1.position.z }, rotation: { y: obj1.rotation.y } },
+                    object2: { position: { x: obj2.position.x, y: obj2.position.y, z: obj2.position.z }, rotation: { x: obj2.rotation.x } },
+                    object3: { position: { x: obj3.position.x, y: obj3.position.y, z: obj3.position.z }, rotation: { z: obj3.rotation.z } }
+                };
+
+                navigator.clipboard.writeText(JSON.stringify(configData, null, 4)).then(() => {
+                    alert('Live scene values copied to clipboard!');
+                }).catch(err => {
+                    console.error('Could not copy state values: ', err);
+                });
+            }
+        };
+
+        // Export utility at the top level
+        gui.add(exporter, 'copyToClipboard').name('📋 Copy Scene Configurations');
 
         // Camera Folder
         const camFolder = gui.addFolder('Camera Settings');
@@ -85,6 +108,14 @@
         camFolder.add(cameraTarget, 'x', -10, 10, 0.1).name('LookAt X').listen();
         camFolder.add(cameraTarget, 'y', -5, 5, 0.1).name('LookAt Y').listen();
         camFolder.add(cameraTarget, 'z', -15, 5, 0.1).name('LookAt Z').listen();
+
+        // Lighting Folder
+        const lightFolder = gui.addFolder('Scene Lighting');
+        lightFolder.add(ambientLight, 'intensity', 0, 5, 0.1).name('Ambient Brightness').listen();
+        lightFolder.add(neonLight, 'intensity', 0, 10, 0.1).name('Neon Brightness').listen();
+        lightFolder.add(neonLight.position, 'x', -20, 20, 0.5).name('Neon Light X').listen();
+        lightFolder.add(neonLight.position, 'y', -5, 30, 0.5).name('Neon Light Y').listen();
+        lightFolder.add(neonLight.position, 'z', -20, 20, 0.5).name('Neon Light Z').listen();
 
         // Object 1 Folder
         const f1 = gui.addFolder('Object 1 (Icosahedron)');
@@ -107,10 +138,9 @@
         f3.add(obj3.position, 'z', -15, 5, 0.1).name('Pos Z').listen();
         f3.add(obj3.rotation, 'z', -Math.PI, Math.PI, 0.01).name('Rot Z').listen();
 
-        gui.close(); // Keeps it clean on load, click to expand folders
+        gui.close();
 
         // 4. THE MASTER SCROLL TIMELINE
-        // Note: Comment out this block if you want to freely play with sliders without scroll interference
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: "body",
@@ -123,20 +153,20 @@
         // Step 1: Camera moves forward, Object 1 moves out of the way & rotates heavily
         tl.to(camera.position, { x: 1, y: 1.5, z: 2 })
           .to(cameraTarget, { x: 2, y: 0, z: -3 }, 0)
-          .to(obj1.position, { x: -4, y: 2 }, 0)              // Push Obj 1 left and up
-          .to(obj1.rotation, { y: Math.PI * 2, x: 1 }, 0)     // Spin Obj 1 dynamically
+          .to(obj1.position, { x: -4, y: 2 }, 0)
+          .to(obj1.rotation, { y: Math.PI * 2, x: 1 }, 0)
 
         // Step 2: Fly past Object 2, which drops downward into the floor as we approach
           .to(camera.position, { x: -1.5, y: 1, z: -4 })
           .to(cameraTarget, { x: 0, y: 0, z: -9 }, "<")
-          .to(obj2.position, { y: -1.2, z: -5 }, "<")         // Animate Obj 2's position down
-          .to(obj2.rotation, { x: Math.PI * -2 }, "<")        // Spin Obj 2 backwards
+          .to(obj2.position, { y: -1.2, z: -5 }, "<")
+          .to(obj2.rotation, { x: Math.PI * -2 }, "<")
 
         // Step 3: Get close to Object 3, which rises into view and spins rapidly
           .to(camera.position, { x: 0, y: 0.5, z: -6.5 })
           .to(cameraTarget, { x: 0, y: 0.5, z: -9 }, "<")
-          .to(obj3.position, { y: 2, x: 0 }, "<")             // Elevate Obj 3
-          .fading = tl.to(obj3.rotation, { z: Math.PI * 4 }, "<"); // Spin Obj 4 times over scroll
+          .to(obj3.position, { y: 2, x: 0 }, "<")
+          .to(obj3.rotation, { z: Math.PI * 4 }, "<");
 
 
         // 5. Loop
