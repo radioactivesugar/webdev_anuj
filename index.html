@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Scene Director</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: #020208; font-family: sans-serif; color: white; height: 500vh; }
+        #canvas-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; }
+        .section { position: relative; height: 100vh; display: flex; align-items: center; padding: 0 10%; z-index: 2; pointer-events: none; }
+        .content { max-width: 350px; background: rgba(5, 5, 15, 0.7); padding: 25px; border-radius: 12px; backdrop-filter: blur(8px); }
+        .lil-gui { --background-color: rgba(15, 15, 25, 0.95); --text-color: #fff; z-index: 100 !important; width: 320px; }
+    </style>
+</head>
+<body>
+
+    <div id="canvas-container"></div>
+
+    <div class="section">
+        <div class="content">
+            <h2>The Cinematic Set</h2>
+            <p>Every value is tracked. Tweak the objects, change the camera path, and scroll to watch the entire world animate together.</p>
+        </div>
+    </div>
+    <div class="section"></div>
+    <div class="section"></div>
+    <div class="section"></div>
+
+    <!-- CDNs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lil-gui@0.18"></script>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // 1. Scene & Setup
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x020208, 0.05);
+
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+        camera.position.set(0, 2, 7);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        container.appendChild(renderer.domElement);
+
+        // Lights
+        scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+        const neonLight = new THREE.DirectionalLight(0x00ffcc, 2.5);
+        neonLight.position.set(5, 10, 2);
+        scene.add(neonLight);
+
+        // Grid Environment
+        const gridHelper = new THREE.GridHelper(100, 50, 0x00ffcc, 0x444444);
+        gridHelper.position.y = -1.5;
+        scene.add(gridHelper);
+
+        // 2. Mesh Objects Setup
+        const material = new THREE.MeshStandardMaterial({ color: 0x00ffcc, wireframe: true });
+        const obj1 = new THREE.Mesh(new THREE.IcosahedronGeometry(1, 0), material);
+        const obj2 = new THREE.Mesh(new THREE.TorusKnotGeometry(0.6, 0.2, 100, 16), material);
+        const obj3 = new THREE.Mesh(new THREE.ConeGeometry(0.8, 2, 4), material);
+
+        // Initial default layout positions
+        obj1.position.set(-2, 0, 2);
+        obj2.position.set(2, 0, -3);
+        obj3.position.set(0, 0.5, -9);
+        scene.add(obj1, obj2, obj3);
+
+        const cameraTarget = new THREE.Vector3(0, 0, 0);
+
+        // 3. GUI Config Object (Fixes missing values by creating direct state tracking)
+        const gui = new lil.GUI({ title: 'Scene Controller' });
+
+        // Camera Folder
+        const camFolder = gui.addFolder('Camera Settings');
+        camFolder.add(camera.position, 'x', -10, 10, 0.1).name('Cam X').listen();
+        camFolder.add(camera.position, 'y', -5, 10, 0.1).name('Cam Y').listen();
+        camFolder.add(camera.position, 'z', -15, 15, 0.1).name('Cam Z').listen();
+        camFolder.add(cameraTarget, 'x', -10, 10, 0.1).name('LookAt X').listen();
+        camFolder.add(cameraTarget, 'y', -5, 5, 0.1).name('LookAt Y').listen();
+        camFolder.add(cameraTarget, 'z', -15, 5, 0.1).name('LookAt Z').listen();
+
+        // Object 1 Folder
+        const f1 = gui.addFolder('Object 1 (Icosahedron)');
+        f1.add(obj1.position, 'x', -10, 10, 0.1).name('Pos X').listen();
+        f1.add(obj1.position, 'y', -5, 5, 0.1).name('Pos Y').listen();
+        f1.add(obj1.position, 'z', -15, 5, 0.1).name('Pos Z').listen();
+        f1.add(obj1.rotation, 'y', -Math.PI, Math.PI, 0.01).name('Rot Y').listen();
+
+        // Object 2 Folder
+        const f2 = gui.addFolder('Object 2 (Torus)');
+        f2.add(obj2.position, 'x', -10, 10, 0.1).name('Pos X').listen();
+        f2.add(obj2.position, 'y', -5, 5, 0.1).name('Pos Y').listen();
+        f2.add(obj2.position, 'z', -15, 5, 0.1).name('Pos Z').listen();
+        f2.add(obj2.rotation, 'x', -Math.PI, Math.PI, 0.01).name('Rot X').listen();
+
+        // Object 3 Folder
+        const f3 = gui.addFolder('Object 3 (Cone)');
+        f3.add(obj3.position, 'x', -10, 10, 0.1).name('Pos X').listen();
+        f3.add(obj3.position, 'y', -5, 5, 0.1).name('Pos Y').listen();
+        f3.add(obj3.position, 'z', -15, 5, 0.1).name('Pos Z').listen();
+        f3.add(obj3.rotation, 'z', -Math.PI, Math.PI, 0.01).name('Rot Z').listen();
+
+        gui.close(); // Keeps it clean on load, click to expand folders
+
+        // 4. THE MASTER SCROLL TIMELINE
+        // Note: Comment out this block if you want to freely play with sliders without scroll interference
+        const tl = gsap.timeline({
+            scrollTrigger: {
+                trigger: "body",
+                start: "top top",
+                end: "bottom bottom",
+                scrub: 1.5,
+            }
+        });
+
+        // Step 1: Camera moves forward, Object 1 moves out of the way & rotates heavily
+        tl.to(camera.position, { x: 1, y: 1.5, z: 2 })
+          .to(cameraTarget, { x: 2, y: 0, z: -3 }, 0)
+          .to(obj1.position, { x: -4, y: 2 }, 0)              // Push Obj 1 left and up
+          .to(obj1.rotation, { y: Math.PI * 2, x: 1 }, 0)     // Spin Obj 1 dynamically
+
+        // Step 2: Fly past Object 2, which drops downward into the floor as we approach
+          .to(camera.position, { x: -1.5, y: 1, z: -4 })
+          .to(cameraTarget, { x: 0, y: 0, z: -9 }, "<")
+          .to(obj2.position, { y: -1.2, z: -5 }, "<")         // Animate Obj 2's position down
+          .to(obj2.rotation, { x: Math.PI * -2 }, "<")        // Spin Obj 2 backwards
+
+        // Step 3: Get close to Object 3, which rises into view and spins rapidly
+          .to(camera.position, { x: 0, y: 0.5, z: -6.5 })
+          .to(cameraTarget, { x: 0, y: 0.5, z: -9 }, "<")
+          .to(obj3.position, { y: 2, x: 0 }, "<")             // Elevate Obj 3
+          .fading = tl.to(obj3.rotation, { z: Math.PI * 4 }, "<"); // Spin Obj 4 times over scroll
+
+
+        // 5. Loop
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Force camera tracking matrix updates
+            camera.lookAt(cameraTarget);
+
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Resize handler
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
