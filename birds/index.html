@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bangalore Bird Map - Timeline Gradient</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+        }
+
+        body, html {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            background: #f4f6f9;
+        }
+
+        header {
+            background: #2c3e50;
+            color: #fff;
+            padding: 15px 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        header h1 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .total-badge {
+            background: #bb3232;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        #map {
+            width: 100%;
+            height: calc(100% - 60px);
+            margin-top: 60px;
+        }
+
+        /* Custom Hover Tooltip Popup Adjustments */
+        .leaflet-popup-content-wrapper {
+            background: rgba(44, 62, 80, 0.95);
+            color: #fff;
+            border-radius: 6px;
+            padding: 3px;
+        }
+        .leaflet-popup-content {
+            margin: 8px 12px;
+            line-height: 1.4;
+            font-size: 13px;
+        }
+        .leaflet-popup-tip {
+            background: rgba(44, 62, 80, 0.95);
+        }
+
+        /* Map Legend Styling */
+        .info.legend {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 12px 16px;
+            font-size: 13px;
+            line-height: 20px;
+            color: #333;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+            border-radius: 6px;
+            font-weight: 500;
+            width: 240px;
+            margin-right: 15px !important;
+            margin-bottom: 15px !important;
+            text-align: center;
+        }
+        .info.legend i {
+            width: 100%;
+            height: 12px;
+            float: left;
+            margin-top: 4px;
+            margin-bottom: 6px;
+            border-radius: 3px;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+        }
+        .legend-labels {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            clear: both;
+            font-weight: 600;
+            font-size: 11px;
+            color: #555;
+        }
+
+        /* New Bird Dashboard Panel - Adjusted for full bleed header drop down */
+        .bird-dashboard {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 0;
+            font-size: 13px;
+            color: #333;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            border-radius: 8px;
+            width: 280px;
+            max-height: 450px;
+            overflow: hidden;
+        }
+
+        /* Highlighted Header Dropdown Styling */
+        .bird-select {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: #34495e;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            outline: none;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 20px;
+            border-bottom: 3px solid #bb3232;
+            transition: background-color 0.2s;
+        }
+
+        .bird-select:hover {
+            background-color: #2c3e50;
+        }
+
+        .bird-select option {
+            background-color: #ffffff;
+            color: #333333;
+            font-weight: normal;
+        }
+
+        /* Padding wrapper for content below header */
+        .dashboard-content {
+            padding: 15px;
+            max-height: 390px;
+            overflow-y: auto;
+        }
+
+        .bird-img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 6px;
+            background-color: #eaeaea;
+            margin-bottom: 12px;
+            border: 1px solid #ddd;
+        }
+
+        .bird-desc {
+            font-size: 12.5px;
+            line-height: 1.5;
+            color: #555;
+            text-align: justify;
+            margin-bottom: 12px;
+        }
+
+        .dashboard-stat {
+            background: #eef2f7;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #2c3e50;
+            border-left: 4px solid #bb3232;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Bangalore Sighting Map Explorer</h1>
+        <div class="total-badge" id="totalCount">Total Records: 0</div>
+    </header>
+
+    <div id="map"></div>
+
+    <script src="red_wattled_lapwing.js"></script>
+    <script src="painted_stork.js"></script>
+    <script src="asian_koel.js"></script>
+    <script src="rock_pigeon.js"></script>
+    <script src="shikra.js"></script>
+
+    <script>
+        const BIRD_REGISTRY = [
+          {
+              id: "shikra",
+              name: "Shikra",
+              image: "imgs/shikra.jpg",
+              description: "",
+              dataKey: "shikraData"
+          },
+          {
+                id: "red_wattled_lapwing",
+                name: "Red-wattled Lapwing",
+                image: "imgs/red_wattled_lapwing.jpg",
+                description: "",
+                dataKey: "birdSightingData"
+            },
+            {
+                id: "painted_stork",
+                name: "Painted Stork",
+                image: "imgs/painted_stork.jpg",
+                description: "",
+                dataKey: "paintedStorkData"
+            },
+            {
+                id: "asian_koel",
+                name: "Asian Koel",
+                image: "imgs/asian_koel.jpg",
+                description: "",
+                dataKey: "asianKoelData"
+            },
+            {
+                id: "rock_pigeon",
+                name: "Rock Pigeon",
+                image: "imgs/rock_pigeon.jpg",
+                description: "",
+                dataKey: "rockPigeonData"
+            }
+        ];
+
+        // Initialize Map View centering over Bangalore coordinates
+        const map = L.map('map', { zoomControl: false }).setView([12.98, 77.62], 11);
+
+        const MAPTILER_KEY = 'WwHGrHnxs6yequATTRsN';
+
+        L.tileLayer(`https://api.maptiler.com/maps/outdoor-v4/{z}/{x}/{y}.png?key=${MAPTILER_KEY}`, {
+            tileSize: 512,
+            zoomOffset: -1,
+            minZoom: 1,
+            maxZoom: 20,
+            attribution: '&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+        }).addTo(map);
+
+        L.control.zoom({ position: 'topleft' }).addTo(map);
+
+        const COLOR_OLDEST = '#cacaca';
+        const COLOR_NEWEST = '#bb3232';
+
+        let markerLayerGroup = L.featureGroup().addTo(map);
+
+        function hexToRgb(hex) {
+            const bigint = parseInt(hex.replace('#', ''), 16);
+            return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
+        }
+
+        function rgbToHex(r, g, b) {
+            return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+        }
+
+        function getColorGradient(value, min, max) {
+            const startColor = hexToRgb(COLOR_OLDEST);
+            const endColor = hexToRgb(COLOR_NEWEST);
+            const factor = max === min ? 1 : (value - min) / (max - min);
+            const r = Math.round(startColor[0] + factor * (endColor[0] - startColor[0]));
+            const g = Math.round(startColor[1] + factor * (endColor[1] - startColor[1]));
+            const b = Math.round(startColor[2] + factor * (endColor[2] - startColor[2]));
+            return rgbToHex(r, g, b);
+        }
+
+        function formatTooltipDate(dateStr) {
+            if (!dateStr || dateStr === "N/A") return "Unknown Date";
+            const dateObj = new Date(dateStr.replace(/-/g, "/"));
+            if (isNaN(dateObj.getTime())) return dateStr;
+            return dateObj.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+        }
+
+        // Dynamic Map Legend Control
+        const legend = L.control({ position: 'bottomright' });
+        legend.onAdd = function () {
+            const div = L.DomUtil.create('div', 'info legend');
+            div.innerHTML = `
+                <div style="margin-bottom: 6px; font-weight: bold; text-align: center; font-size: 12px; color: #2c3e50;">Sighting Timeline</div>
+                <i style="background: linear-gradient(to right, ${COLOR_OLDEST}, ${COLOR_NEWEST});"></i>
+                <div class="legend-labels">
+                    <span id="legendOldest">----</span>
+                    <span id="legendNewest">----</span>
+                </div>
+            `;
+            return div;
+        };
+        legend.addTo(map);
+
+        // Custom Leaflet Control for the Top-Right Selector Dashboard Card
+        const dashboard = L.control({ position: 'topright' });
+        dashboard.onAdd = function () {
+            const div = L.DomUtil.create('div', 'bird-dashboard');
+            let optionsHtml = BIRD_REGISTRY.map(bird => `<option value="${bird.id}">${bird.name}</option>`).join('');
+
+            div.innerHTML = `
+                <select id="birdSelector" class="bird-select">
+                    ${optionsHtml}
+                </select>
+                <div class="dashboard-content">
+                    <img id="dashBirdImg" class="bird-img" src="" alt="Bird Image Selection"/>
+                    <div id="dashBirdDesc" class="bird-desc">Select a bird to see details.</div>
+                    <div id="dashBirdCount" class="dashboard-stat">Total Sightings: 0</div>
+                </div>
+            `;
+
+            L.DomEvent.disableClickPropagation(div);
+            L.DomEvent.disableScrollPropagation(div);
+            return div;
+        };
+        dashboard.addTo(map);
+
+        // Core Rendering Logic engine
+        function renderBirdMap(birdId) {
+            const bird = BIRD_REGISTRY.find(b => b.id === birdId);
+            if (!bird) return;
+
+            // Update UI Sidebar Info
+            document.getElementById("dashBirdImg").src = bird.image;
+            document.getElementById("dashBirdImg").alt = bird.name;
+            document.getElementById("dashBirdDesc").innerText = bird.description;
+
+            // Clear any active map layers from the last lookup execution
+            markerLayerGroup.clearLayers();
+
+            // Safely verify if data object exists in window scope
+            const activeData = window[bird.dataKey];
+
+            if (activeData && activeData.features) {
+                const features = activeData.features;
+
+                // Synchronize both top badge and dashboard panel counts
+                const totalText = `Click the bird name to change the bird.`;
+                document.getElementById("totalCount").innerText = totalText;
+                document.getElementById("totalCount").style.background = "#bb3232";
+                document.getElementById("dashBirdCount").innerText = `Total Sightings: ${features.length}`;
+
+                let minTime = Infinity;
+                let maxTime = -Infinity;
+
+                features.forEach(f => {
+                    if(f.properties && f.properties.date) {
+                        const time = new Date(f.properties.date.replace(/-/g, "/")).getTime();
+                        if (time < minTime) minTime = time;
+                        if (time > maxTime) maxTime = time;
+                    }
+                });
+
+                if (minTime === Infinity) { minTime = 0; maxTime = 1; }
+
+                // Update Timeline dynamic years
+                document.getElementById("legendOldest").innerText = `${new Date(minTime).getFullYear()} (Oldest)`;
+                document.getElementById("legendNewest").innerText = `${new Date(maxTime).getFullYear()} (Newest)`;
+
+                // Loop through features to build markers
+                features.forEach(f => {
+                    if (!f.geometry || !f.geometry.coordinates) return;
+                    const coords = f.geometry.coordinates;
+                    const props = f.properties || {};
+
+                    const locName = props.location || "Unknown Location";
+                    const rawDate = props.date ? props.date.substring(0, 10) : "N/A";
+                    const displayDate = formatTooltipDate(rawDate);
+                    const countVal = props.count !== undefined ? props.count : "Unknown";
+
+                    const currentTime = rawDate !== "N/A" ? new Date(rawDate.replace(/-/g, "/")).getTime() : minTime;
+                    const markerColor = getColorGradient(currentTime, minTime, maxTime);
+
+                    const marker = L.circleMarker([coords[1], coords[0]], {
+                        radius: 10,
+                        fillColor: markerColor,
+                        stroke: false,
+                        fillOpacity: 0.85
+                    });
+
+                    const popupContent = `
+                        <div>
+                            <strong style="color: #f39c12; font-size: 14px;">${locName}</strong><br/>
+                            🗓️ <b>Date:</b> ${displayDate}<br/>
+                            🦩 <b>Count:</b> ${countVal} Birds
+                        </div>
+                    `;
+
+                    marker.bindPopup(popupContent, { closeButton: false, offset: L.point(0, -2) });
+
+                    marker.on('mouseover', function () {
+                        this.openPopup();
+                        this.setStyle({ radius: 15, fillOpacity: 1.0 });
+                    });
+
+                    marker.on('mouseout', function () {
+                        this.closePopup();
+                        this.setStyle({ radius: 10, fillOpacity: 0.85 });
+                    });
+
+                    markerLayerGroup.addLayer(marker);
+                });
+
+            } else {
+                document.getElementById("totalCount").innerText = "Data file missing";
+                document.getElementById("totalCount").style.background = "#e74c3c";
+                document.getElementById("dashBirdCount").innerText = "Total Sightings: Data Missing";
+                document.getElementById("legendOldest").innerText = "----";
+                document.getElementById("legendNewest").innerText = "----";
+                console.error(`Error: Data variable '${bird.dataKey}' could not be resolved from loaded environment scope scripts.`);
+            }
+        }
+
+        // Add Event Listener to Dropdown Select element changes
+        document.getElementById("birdSelector").addEventListener("change", function(e) {
+            renderBirdMap(e.target.value);
+        });
+
+        // Initialize App View configuration with the first bird loaded on default startup
+        if(BIRD_REGISTRY.length > 0) {
+            renderBirdMap(BIRD_REGISTRY[0].id);
+        }
+    </script>
+</body>
+</html>
