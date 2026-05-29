@@ -244,8 +244,16 @@
             }
         ];
 
-        // Initialize Map View centering over Bangalore coordinates
-        const map = L.map('map', { zoomControl: false }).setView([12.98, 77.62], 11);
+
+                // Detect if the screen is mobile (less than 768px wide)
+                const isMobile = window.innerWidth < 768;
+
+                // Set responsive values: mobile gets a closer zoom, desktop gets a wider view
+                const mapCenter = isMobile ? [13.08, 77.69] : [12.98, 77.68];
+                const mapZoom = isMobile ? 9.5 : 10; // 10 for mobile (zoomed closer), 11 for web
+
+                // Initialize the map with dynamic configuration
+                const map = L.map('map', { zoomControl: false }).setView(mapCenter, mapZoom);
 
         const MAPTILER_KEY = 'WwHGrHnxs6yequATTRsN';
 
