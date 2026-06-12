@@ -353,14 +353,14 @@
             gsap.registerPlugin(ScrollTrigger);
             const canvas = document.getElementById("sequence-canvas");
             const context = canvas.getContext("2d");
-            const debugValEl = document.getElementById("debug-frame-val");
+            // const debugValEl = document.getElementById("debug-frame-val");
 
             canvas.width = 1920;
             canvas.height = 1080;
 
             const frameCount = 300;
             const currentFrame = (index) =>
-                `/bhog56/toWEBP/Image Seq${String(index + 1).padStart(4, "0")}.webp`;
+                `toWEBP/Image Seq${String(index + 1).padStart(4, "0")}.webp`;
 
             const images = [];
             const videoSequence = { frame: 0 };
@@ -394,7 +394,7 @@
                     img.height * ratio,
                 );
 
-                debugValEl.textContent = videoSequence.frame;
+                // debugValEl.textContent = videoSequence.frame;
             }
 
             images[0].onload = render;
