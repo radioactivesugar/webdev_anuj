@@ -353,7 +353,7 @@
             gsap.registerPlugin(ScrollTrigger);
             const canvas = document.getElementById("sequence-canvas");
             const context = canvas.getContext("2d");
-            const debugValEl = document.getElementById("debug-frame-val");
+            // const debugValEl = document.getElementById("debug-frame-val");
 
             canvas.width = 1920;
             canvas.height = 1080;
@@ -394,7 +394,7 @@
                     img.height * ratio,
                 );
 
-                debugValEl.textContent = videoSequence.frame;
+                // debugValEl.textContent = videoSequence.frame;
             }
 
             images[0].onload = render;
