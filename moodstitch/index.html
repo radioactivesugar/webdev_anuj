@@ -176,9 +176,11 @@ function load() {
   } catch (e) {}
 }
 function save() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify({
-    name: state.name, onboarded: state.onboarded, entries: state.entries, customTags: state.customTags, theme: state.theme
-  }));
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      name: state.name, onboarded: state.onboarded, entries: state.entries, customTags: state.customTags, theme: state.theme
+    }));
+  } catch (e) { /* storage unavailable or full — keep running in-memory */ }
 }
 
 // ---------- helpers ----------
@@ -304,7 +306,11 @@ function addCustomTag() {
   if (!state.customTags.includes(clean)) state.customTags.push(clean);
   toggleTag(clean);
 }
-function setName(v) { state.name = v; }
+function setName(v) {
+  state.name = v;
+  const btn = document.getElementById("ob-continue");
+  if (btn) btn.disabled = !v.trim();
+}
 function setNote(v) { state.draft.note = v; }
 function setDebugDate(v) { state.draft.debugDate = v; }
 function goStep(n) { state.obStep = n; render(); }
@@ -400,7 +406,7 @@ function renderOnboarding() {
       <div><div class="disp" style="font-size:26px">Before we start</div>
       <div style="font-size:14px;color:var(--text-muted);margin-top:6px;line-height:1.6">What should we call you? This stays on your device, nowhere else.</div></div>
       <input type="text" value="${esc(state.name)}" oninput="setName(this.value)" placeholder="Your name">
-      <button class="btn-primary" ${state.name.trim()?'':'disabled'} onclick="goStep(1)">Continue</button>
+      <button id="ob-continue" class="btn-primary" ${state.name.trim()?'':'disabled'} onclick="goStep(1)">Continue</button>
     </div>`;
   if (state.obStep === 1) return `
     <div style="padding:40px 24px;min-height:480px;display:flex;flex-direction:column;justify-content:center;gap:20px">
