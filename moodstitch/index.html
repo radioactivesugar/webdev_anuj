@@ -118,7 +118,7 @@
                 flex-direction: row;
                 align-items: center;
                 gap: 9px;
-                padding: 11px 12px;
+                padding: 10px 11px;
                 min-height: 0;
                 border-radius: 12px;
                 cursor: pointer;
@@ -128,11 +128,16 @@
             }
             .mood-opt.active {
                 border-width: 2px;
-                padding: 10px 11px;
+                padding: 9px 10px;
+            }
+            .mood-opt .mood-label {
+                font-size: 12px;
+                line-height: 1.25;
+                font-weight: 500;
             }
             .mood-dot {
-                width: 16px;
-                height: 16px;
+                width: 14px;
+                height: 14px;
                 flex: none;
                 border-radius: 50%;
             }
@@ -463,22 +468,22 @@
                             id: "rough",
                             label: "High energy, unpleasant",
                             score: 2,
-                            color: "#C0392B",
-                            bg: "#F3D8D2",
+                            color: "#A73B36",
+                            bg: "#F1D9D3",
                         },
                         {
                             id: "low",
                             label: "Low energy, unpleasant",
                             score: 1,
-                            color: "#3E6DA8",
-                            bg: "#D9E2EF",
+                            color: "#E8823E",
+                            bg: "#F7E3CE",
                         },
                         {
                             id: "great",
                             label: "High energy, pleasant",
                             score: 4,
-                            color: "#E0A72E",
-                            bg: "#F7EAC9",
+                            color: "#E0B012",
+                            bg: "#F7EDCB",
                         },
                         {
                             id: "good",
@@ -520,15 +525,15 @@
                             id: "low",
                             label: "Low energy, unpleasant",
                             score: 1,
-                            color: "#4C8BE8",
-                            bg: "#0C1F3A",
+                            color: "#FDB22C",
+                            bg: "#3A2607",
                         },
                         {
                             id: "great",
                             label: "High energy, pleasant",
                             score: 4,
-                            color: "#FDB22C",
-                            bg: "#3A2607",
+                            color: "#FE72D3",
+                            bg: "#3A1030",
                         },
                         {
                             id: "good",
@@ -620,15 +625,15 @@
                             id: "low",
                             label: "Low energy, unpleasant",
                             score: 1,
-                            color: "#4E5C71",
-                            bg: "#C6C8CF",
+                            color: "#7E6376",
+                            bg: "#D3CACA",
                         },
                         {
                             id: "great",
                             label: "High energy, pleasant",
                             score: 4,
-                            color: "#94886C",
-                            bg: "#D9D5C8",
+                            color: "#4E5C71",
+                            bg: "#C6C8C9",
                         },
                         {
                             id: "good",
@@ -1262,13 +1267,18 @@
                     Boolean,
                 );
                 const picker = `<div class="mood-row">${orderedMoods
-                    .map(
-                        (m) => `
+                    .map((m) => {
+                        const parts = m.label.split(",");
+                        const labelHtml =
+                            parts.length > 1
+                                ? `${parts[0].trim()},<br>${parts.slice(1).join(",").trim()}`
+                                : m.label;
+                        return `
     <div class="mood-opt ${value === m.id ? "active" : ""}" style="${value === m.id ? `border-color:${m.color};background:${m.bg}` : ""}" onclick="pickMood('${m.id}')">
       <div class="mood-dot" style="background:${m.color}"></div>
-      <span style="font-size:11.5px;line-height:1.25;font-weight:500;color:${value === m.id ? m.color : "var(--text-muted)"}">${m.label}</span>
-    </div>`,
-                    )
+      <span class="mood-label" style="color:${value === m.id ? m.color : "var(--text-muted)"}">${labelHtml}</span>
+    </div>`;
+                    })
                     .join("")}</div>`;
 
                 // Secondary picker area is ALWAYS reserved (fixed height) so nothing below shifts.
@@ -1278,22 +1288,24 @@
                     const subs = SUBMOODS[value] || [];
                     inner = `
       <div class="tag-group-label" style="margin-bottom:8px">Which feels closest?</div>
-      <div class="no-scrollbar" style="display:flex;gap:8px;overflow-x:auto;flex-wrap:nowrap">
+      <div class="no-scrollbar" style="overflow-x:auto;padding-bottom:2px">
+        <div style="display:grid;grid-auto-flow:column;grid-template-rows:repeat(2,auto);gap:8px;justify-content:start;width:max-content">
         ${subs
             .map((s) => {
                 const shade = shadeColor(base.color, s.tone, s.hue);
                 const on = subValue === s.id;
-                return `<button class="chip" style="flex:none;display:flex;align-items:center;gap:7px;${on ? `border-color:${shade};background:${base.bg};color:var(--text)` : ""}" onclick="pickSub('${s.id}')">
+                return `<button class="chip" style="display:flex;align-items:center;gap:7px;white-space:nowrap;${on ? `border-color:${shade};background:${base.bg};color:var(--text)` : ""}" onclick="pickSub('${s.id}')">
             <span style="width:12px;height:12px;border-radius:50%;background:${shade};flex:none"></span>${s.label}
           </button>`;
             })
             .join("")}
+        </div>
       </div>`;
                 }
-                const subArea = `<div style="height:70px;margin-top:10px;overflow:hidden">${inner}</div>`;
+                const subArea = `<div style="height:110px;margin-top:12px;overflow:hidden">${inner}</div>`;
                 return picker + subArea;
             }
-            function tagPickerHtml(selected) {
+            function tagPickerHtml(selected, showHeader) {
                 // usage counts across all logged entries
                 const usage = {};
                 state.entries.forEach((e) =>
@@ -1322,7 +1334,10 @@
                             `<button class="chip ${selected.includes(t) ? "active" : ""}" style="white-space:nowrap" onclick="toggleTag('${esc(t)}')">${esc(t)}</button>`,
                     )
                     .join("");
-                return `<div class="no-scrollbar" style="overflow-x:auto;padding-bottom:4px">
+                const header = showHeader
+                    ? `<div class="tag-group-label" style="margin-bottom:8px">What made you feel that?</div>`
+                    : "";
+                return `${header}<div class="no-scrollbar" style="overflow-x:auto;padding-bottom:4px">
     <div style="display:grid;grid-auto-flow:column;grid-template-rows:repeat(2,auto);gap:8px;justify-content:start;width:max-content">
       ${chips}
       <button class="chip dashed" style="white-space:nowrap" onclick="addCustomTag()">+ Add custom</button>
@@ -1379,13 +1394,13 @@
 
             function renderEntry() {
                 return `
-    <div style="padding:26px 22px 18px;flex:none;text-align:center">
+    <div style="padding:20px 22px 14px;flex:none;text-align:center">
       <div class="disp" style="font-size:22px">${esc(state.logPhrase || logPhrase(state.name.trim().split(" ")[0]))}</div>
       <div style="font-size:13px;color:var(--text-faint);margin-top:4px">${new Date().toLocaleDateString([], { weekday: "long", month: "long", day: "numeric" })}</div>
     </div>
-    <div class="no-scrollbar" style="padding:0 22px 14px;display:flex;flex-direction:column;gap:20px;flex:1;overflow-y:auto">
+    <div class="no-scrollbar" style="padding:0 22px 14px;display:flex;flex-direction:column;gap:16px;flex:1;overflow-y:auto">
       ${moodPickerHtml(state.draft.mood, state.draft.sub)}
-      ${tagPickerHtml(state.draft.tags)}
+      ${tagPickerHtml(state.draft.tags, true)}
       <textarea rows="3" placeholder="Anything you want to remember about this moment (optional)" oninput="setNote(this.value)">${esc(state.draft.note)}</textarea>
       <div class="debug-box">
         <span style="font-size:11px;color:var(--text-muted);font-weight:500;white-space:nowrap">Debug date</span>
