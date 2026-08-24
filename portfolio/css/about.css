@@ -1,0 +1,81 @@
+/* =========================================================
+   ABOUT PAGE  (aboutme.html)
+   Only the intro hero is page-specific; everything below it reuses
+   the shared story blocks in css/story.css.
+   ========================================================= */
+
+.about-intro {
+  padding-top: 2rem;
+}
+
+.about-intro__grid {
+  display: grid;
+  grid-template-columns: minmax(240px, 24%) 1fr minmax(48px, 64px);
+  gap: 3.5rem;
+  align-items: start;
+}
+
+/* Left image block, reuses hero.css's mask-reveal image pattern */
+.about-intro__image-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.about-intro__image-card-bg {
+  position: absolute;
+  top: 30px;
+  left: -20px;
+  width: calc(100% + 40px);
+  height: 100%;
+  background-color: #ebebeb;
+  z-index: 1;
+}
+
+.about-intro__image-wrapper .hero-image-mask {
+  height: 420px;
+}
+
+/* Name + intro copy */
+.about-intro__content {
+  padding-top: 0.5rem;
+}
+
+.about-intro__title {
+  justify-content: flex-start;
+  font-size: clamp(2.75rem, 9vw, 6rem);
+  margin-bottom: 2rem;
+}
+
+/* Decorative vertical thumbnail rail, right edge */
+.about-intro__thumbs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding-top: 0.5rem;
+}
+
+.about-intro__thumb {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background-color: var(--card-bg-alt);
+}
+
+@media (max-width: 900px) {
+  .about-intro__grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .about-intro__thumbs {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .about-intro__thumb {
+    width: 48px;
+  }
+
+  .about-intro__image-wrapper .hero-image-mask {
+    height: 320px;
+  }
+}

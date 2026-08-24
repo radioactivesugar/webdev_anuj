@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Me - Anuj Debnath</title>
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/hero.css">
+  <link rel="stylesheet" href="css/story.css">
+  <link rel="stylesheet" href="css/contact.css">
+  <link rel="stylesheet" href="css/about.css">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+</head>
+<body>
+
+  <!-- ============ SITE HEADER ============ -->
+  <header class="site-header">
+    <a href="index.html" class="site-header__brand">Anuj<br>Debnath</a>
+    <nav class="site-nav">
+      <a class="site-nav__link" href="aboutme.html">about me</a>
+      <a class="site-nav__link" href="index.html#works">works</a>
+      <a class="site-nav__link" href="index.html#connect">connect</a>
+    </nav>
+  </header>
+
+  <!-- ============ INTRO HERO ============ -->
+  <section id="intro" class="section about-intro">
+    <div class="about-intro__grid">
+
+      <!-- Portrait image, reuses the hero mask-reveal from hero.css -->
+      <div class="about-intro__image-wrapper">
+        <div class="about-intro__image-card-bg"></div>
+        <div class="hero-image-mask" id="aboutImageMask">
+          <div class="hero-image-placeholder"></div>
+        </div>
+        <div class="hero-image-caption">
+          <h3>Visual Data Journalist</h3>
+          <p>at The Ken</p>
+        </div>
+      </div>
+
+      <!-- Name + intro copy -->
+      <div class="about-intro__content">
+        <h1 class="section-title about-intro__title" id="about-title">ANUJ</h1>
+        <p class="story-text__lede">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam felis velit, ornare non quam ac, convallis ornare leo.</p>
+        <p class="story-text__body">Sed egestas elit a sapien euismod, nec faucibus lectus posuere. Donec malesuada scelerisque purus. Nam felis arcu, ullamcorper eu placerat nec, maximus ut nunc. Curabitur mollis lectus eget risus pulvinar vestibulum. Etiam semper augue ut rutrum iaculis. In congue turpis non nunc dapibus, ac ultricies mauris rutrum. Quisque hendrerit enim ac leo faucibus, ut pulvinar enim molestie. In hac habitasse platea dictumst. Sed dapibus id metus vehicula accumsan.</p>
+      </div>
+
+      <!-- Decorative thumbnail rail -->
+      <div class="about-intro__thumbs" aria-hidden="true">
+        <span class="about-intro__thumb"></span>
+        <span class="about-intro__thumb"></span>
+        <span class="about-intro__thumb"></span>
+        <span class="about-intro__thumb"></span>
+        <span class="about-intro__thumb"></span>
+        <span class="about-intro__thumb"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STORY CONTENT ============ -->
+  <section class="section about-story">
+
+    <div class="story-block">
+      <div class="story-text">
+        <p class="story-text__lede">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam felis velit, ornare non quam ac, convallis ornare leo.</p>
+        <p class="story-text__body">Sed egestas elit a sapien euismod, nec faucibus lectus posuere. Donec malesuada scelerisque purus. Nam felis arcu, ullamcorper eu placerat nec, maximus ut nunc. Curabitur mollis lectus eget risus pulvinar vestibulum. Etiam semper augue ut rutrum iaculis. In congue turpis non nunc dapibus, ac ultricies mauris rutrum. Quisque hendrerit enim ac leo faucibus, ut pulvinar enim molestie. In hac habitasse platea dictumst. Sed dapibus id metus vehicula accumsan.</p>
+      </div>
+      <div class="story-image"></div>
+    </div>
+
+    <div class="story-image story-image--full"></div>
+
+    <div class="story-block story-block--reverse">
+      <div class="story-text">
+        <p class="story-text__lede">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam felis velit, ornare non quam ac, convallis ornare leo.</p>
+        <p class="story-text__body">Sed egestas elit a sapien euismod, nec faucibus lectus posuere. Donec malesuada scelerisque purus. Nam felis arcu, ullamcorper eu placerat nec, maximus ut nunc. Curabitur mollis lectus eget risus pulvinar vestibulum. Etiam semper augue ut rutrum iaculis.</p>
+      </div>
+      <div class="story-image"></div>
+    </div>
+
+    <div class="story-image-row">
+      <div class="story-image"></div>
+      <div class="story-image"></div>
+    </div>
+
+    <div class="story-text-block story-text-block--indent">
+      <p class="story-text__lede">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam felis velit, ornare non quam ac, convallis ornare leo.</p>
+    </div>
+
+    <div class="story-gallery-grid">
+      <div class="story-image"></div>
+      <div class="story-image"></div>
+      <div class="story-image"></div>
+      <div class="story-image"></div>
+      <div class="story-image"></div>
+      <div class="story-image"></div>
+      <div class="story-image"></div>
+      <div class="story-image"></div>
+    </div>
+
+    <div class="story-block">
+      <div class="story-text">
+        <p class="story-text__lede">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam felis velit, ornare non quam ac, convallis ornare leo.</p>
+        <p class="story-text__body">Sed egestas elit a sapien euismod, nec faucibus lectus posuere. Donec malesuada scelerisque purus. Nam felis arcu, ullamcorper eu placerat nec, maximus ut nunc. Curabitur mollis lectus eget risus pulvinar vestibulum. Etiam semper augue ut rutrum iaculis. In congue turpis non nunc dapibus, ac ultricies mauris rutrum.</p>
+      </div>
+      <div class="story-image"></div>
+    </div>
+
+    <div class="story-text-block">
+      <p class="story-text__body">Sed egestas elit a sapien euismod, nec faucibus lectus posuere. Donec malesuada scelerisque purus. Nam felis arcu, ullamcorper eu placerat nec, maximus ut nunc. Curabitur mollis lectus eget risus pulvinar vestibulum. Etiam semper augue ut rutrum iaculis. In congue turpis non nunc dapibus, ac ultricies mauris rutrum. Quisque hendrerit enim ac leo faucibus, ut pulvinar enim molestie. In hac habitasse platea dictumst. Sed dapibus id metus vehicula accumsan.</p>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <section class="section contact-section">
+    <div class="contact-details">
+      <a class="contact-details__line" href="tel:+910000000000">+91 00000 00000</a>
+      <a class="contact-details__line" href="mailto:hello@anujdebnath.com">hello@anujdebnath.com</a>
+    </div>
+
+    <div class="contact-social-row">
+      <a class="link-arrow" href="#" target="_blank" rel="noopener">Instagram &#8599;</a>
+      <a class="link-arrow" href="#" target="_blank" rel="noopener">Telegram &#8599;</a>
+      <a class="link-arrow" href="#" target="_blank" rel="noopener">Facebook &#8599;</a>
+    </div>
+
+    <div class="footer-columns">
+      <ul class="footer-nav">
+        <li><a class="footer-nav__link" href="aboutme.html">About Me</a></li>
+        <li><a class="footer-nav__link" href="#">Services</a></li>
+        <li><a class="footer-nav__link" href="index.html#works">Works</a></li>
+      </ul>
+
+      <address class="footer-address">
+        Address:<br>
+        Bengaluru,<br>
+        India
+      </address>
+    </div>
+
+    <div class="footer-links-row">
+      <a class="footer-links-row__link" href="#" target="_blank" rel="noopener">[ Dribbble ]</a>
+      <a class="footer-links-row__link" href="#" target="_blank" rel="noopener">[ Behance ]</a>
+      <a class="footer-links-row__link" href="#" target="_blank" rel="noopener">[ LinkedIn ]</a>
+    </div>
+
+    <h2 class="footer-wordmark" id="footer-wordmark">ANUJ DEBNATH</h2>
+  </section>
+
+  <div class="footer-bottom">
+    <span class="footer-bottom__location" id="footerClock">INDIA: (GMT+5:30) --:--</span>
+    <span class="footer-bottom__credit">Design &amp; Development &mdash; Anuj Debnath</span>
+    <span class="footer-bottom__copyright">2026 All Rights Reserved. Anuj Debnath. Any reproduction, distribution, or use of the materials without permission is prohibited.</span>
+  </div>
+
+  <script src="js/common.js"></script>
+  <script src="js/story.js"></script>
+  <script src="js/about.js"></script>
+</body>
+</html>

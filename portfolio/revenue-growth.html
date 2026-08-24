@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!--
+    CASE STUDY PAGE: Intermission // Revenue Growth
+    Built on the shared case-study design system: css/style.css +
+    css/story.css + css/case-study.css + css/case-study-alt.css (the
+    shared "alternate layout" family also used by undersea-cables.html
+    and lightrock.html), plus js/common.js, js/story.js,
+    js/case-study.js.
+    Series order: project.html -> undersea-cables.html -> bajaj-finance.html -> lightrock.html -> revenue-growth.html (last - no NEXT)
+  -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Intermission // Revenue Growth - Anuj Debnath</title>
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/story.css">
+  <link rel="stylesheet" href="css/contact.css">
+  <link rel="stylesheet" href="css/case-study.css">
+  <link rel="stylesheet" href="css/case-study-alt.css">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+</head>
+<body>
+
+  <!-- ============ SITE HEADER ============ -->
+  <header class="site-header">
+    <a href="index.html" class="site-header__brand">Anuj<br>Debnath</a>
+    <nav class="site-nav">
+      <a class="site-nav__link" href="aboutme.html">about me</a>
+      <a class="site-nav__link" href="index.html#works">works</a>
+      <a class="site-nav__link" href="index.html#connect">connect</a>
+    </nav>
+  </header>
+
+  <!-- ============ CASE STUDY HERO ============ -->
+  <section id="case-study-hero" class="section">
+    <div class="case-study-hero">
+      <div class="case-study-hero__image" id="caseStudyHeroImage"></div>
+
+      <div class="case-study-hero__content">
+        <h1 class="section-title case-study-hero__title" id="case-study-title">REVENUE GROWTH</h1>
+        <p class="story-text__lede case-study-hero__subtitle">At RBI-licensed NBFCs, 600% annual interest is board-approved, "reasonable," and perfectly legal.</p>
+      </div>
+
+      <div class="meta-list case-study-hero__meta">
+        <span>09/04/2026</span>
+        <span>Duration: 1 Week</span>
+        <span>Writer: Mrunmayee Kulkarni</span>
+        <span>Information Design, Web Development</span>
+        <span>eCharts, iFrame, CSS, JavaScript, Figma, GitHub, Google Gemini, Claude Code</span>
+        <span>Live link: <a href="#">Intermission/Revenue Growth</a></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STORY CONTENT ============ -->
+  <section class="section case-study-story">
+
+    <!-- Intro -->
+    <div class="story-block">
+      <div class="story-text">
+        <p class="story-text__lede">"The very first application came back sanctioned by an RBI-licensed NBFC, at an annualised interest rate of 886%."</p>
+        <p class="story-text__body">The story examined a cluster of Non-Banking Financial Companies (NBFCs) running high-APR personal loan products, whose revenues rose sharply through FY25 — and asked what that rapid growth said about the lending practices behind it.</p>
+      </div>
+      <div class="story-image"></div>
+    </div>
+
+    <!-- Data -->
+    <h2 class="section-title story-heading story-heading--data">DATA</h2>
+    <div class="story-text-block">
+      <p class="story-text__lede">The data provided was broken down into 2 layers of information to make it digestible for the readers.</p>
+    </div>
+    <div class="story-columns">
+      <div>
+        <p class="story-text__lede">Primary Layer<br>of data</p>
+        <p class="story-text__body">Legible without any interaction.</p>
+      </div>
+      <div>
+        <p class="story-text__body">The shift in company valuation/revenue</p>
+        <p class="story-text__body">Comparative scale of growth across companies</p>
+        <p class="story-text__body">The overall magnitude of the trend</p>
+      </div>
+      <div>
+        <p class="story-text__lede">Secondary Layer<br>of data</p>
+        <p class="story-text__body">revealed on hover</p>
+      </div>
+      <div>
+        <p class="story-text__body">Company Name</p>
+        <p class="story-text__body">Actual revenue figures</p>
+        <p class="story-text__body">Translation of the growth multiple</p>
+        <p class="story-text__body">Year of establishment</p>
+      </div>
+    </div>
+    <div class="story-image"></div>
+
+    <!-- Design -->
+    <h2 class="section-title story-heading story-heading--design">DESIGN</h2>
+    <div class="story-image story-image--full"></div>
+
+    <div class="story-columns">
+      <div class="story-columns__spacer story-columns__spacer--wide" aria-hidden="true"></div>
+      <div>
+        <p class="story-text__lede">The result is a packed bubble chart, titled Class of FY25, clustering NBFCs whose high-APR personal loan revenues grew sharply over the past year:</p>
+        <p class="story-text__body"><strong>Bubble size</strong> maps to how many times a company's revenue multiplied between FY24 and FY25</p>
+        <p class="story-text__body"><strong>Bubble colour</strong> distinguishes profitable companies (a green gradient, scaling with growth multiple) from loss-making ones (flat orange/red)</p>
+        <div class="story-image story-stack-image"></div>
+      </div>
+    </div>
+
+    <div class="story-columns">
+      <div class="story-columns__spacer" aria-hidden="true"></div>
+      <div>
+        <p class="story-text__lede">Hover state — surfaces company-level detail</p>
+        <p class="story-text__body">The revenue in FY24 and FY25, growth multiple, year of establishment, and the loan brands operating under each NBFC.</p>
+        <div class="story-image story-stack-image"></div>
+        <p class="story-text__body">A minimum size cap was applied to the bubbles. Without it, companies with 1–2x growth would be visually negligible next to outliers growing 6,000x+. The cap was a deliberate accessibility trade-off — sacrificing strict proportionality so that every company in the dataset remains visible and comparable.</p>
+      </div>
+    </div>
+
+    <div class="story-text-block">
+      <p class="story-text__lede">The final visualisation was embedded into the story via an iframe, and published on 16th April.</p>
+    </div>
+    <div class="story-iframe-wrapper">
+      <iframe class="story-iframe" src="prototypes/nbfc_rbi/index.html" title="Revenue Growth - interactive visualisation" loading="lazy"></iframe>
+    </div>
+  </section>
+
+  <!-- ============ BACK PROJECT PAGER (no NEXT - this is the last episode) ============ -->
+  <section class="section case-study-pager">
+    <div class="case-study-pager-previews">
+      <a href="lightrock.html" class="case-study-pager-preview case-study-pager-preview--back">
+        <div class="story-overlap">
+          <span class="section-title case-study-pager__label story-overlap__heading back-header">BACK</span>
+          <div class="story-image"></div>
+        </div>
+        <p class="case-study-pager-preview__lede">Investment Chart: a royal family's billion-dollar bet on Indian startups, without a winner.</p>
+        <div class="meta-list">
+          <span>09/04/2026</span>
+          <span>The-Ken/Intermission</span>
+          <span>eCharts, iFrame, CSS, JavaScript, Figma, GitHub, Google Gemini</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <section class="section contact-section">
+    <div class="contact-details">
+      <a class="contact-details__line" href="tel:+910000000000">+91 00000 00000</a>
+      <a class="contact-details__line" href="mailto:hello@anujdebnath.com">hello@anujdebnath.com</a>
+    </div>
+
+    <div class="contact-social-row">
+      <a class="link-arrow" href="#" target="_blank" rel="noopener">Instagram &#8599;</a>
+      <a class="link-arrow" href="#" target="_blank" rel="noopener">Telegram &#8599;</a>
+      <a class="link-arrow" href="#" target="_blank" rel="noopener">Facebook &#8599;</a>
+    </div>
+
+    <div class="footer-columns">
+      <ul class="footer-nav">
+        <li><a class="footer-nav__link" href="aboutme.html">About Me</a></li>
+        <li><a class="footer-nav__link" href="#">Services</a></li>
+        <li><a class="footer-nav__link" href="index.html#works">Works</a></li>
+      </ul>
+
+      <address class="footer-address">
+        Address:<br>
+        Bengaluru,<br>
+        India
+      </address>
+    </div>
+
+    <div class="footer-links-row">
+      <a class="footer-links-row__link" href="#" target="_blank" rel="noopener">[ Dribbble ]</a>
+      <a class="footer-links-row__link" href="#" target="_blank" rel="noopener">[ Behance ]</a>
+      <a class="footer-links-row__link" href="#" target="_blank" rel="noopener">[ LinkedIn ]</a>
+    </div>
+
+    <h2 class="footer-wordmark" id="footer-wordmark">ANUJ DEBNATH</h2>
+  </section>
+
+  <div class="footer-bottom">
+    <span class="footer-bottom__location" id="footerClock">INDIA: (GMT+5:30) --:--</span>
+    <span class="footer-bottom__credit">Design &amp; Development &mdash; Anuj Debnath</span>
+    <span class="footer-bottom__copyright">2026 All Rights Reserved. Anuj Debnath. Any reproduction, distribution, or use of the materials without permission is prohibited.</span>
+  </div>
+
+  <script src="js/common.js"></script>
+  <script src="js/story.js"></script>
+  <script src="js/case-study.js"></script>
+</body>
+</html>

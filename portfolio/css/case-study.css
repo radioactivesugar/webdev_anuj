@@ -1,0 +1,168 @@
+/* =========================================================
+   CASE STUDY DESIGN SYSTEM
+   Shared by every case-study page (project.html, bajaj-finance.html,
+   undersea-cables.html, ...): the hero (image + overlapping title +
+   bottom-aligned meta) and the prev/next pager. No page-specific
+   content lives here - only the reusable structure. Story content
+   below the hero reuses the shared blocks in css/story.css. Each
+   page may add its own small companion stylesheet (e.g.
+   css/bajaj-finance.css) for anything unique to that page only.
+   ========================================================= */
+
+/* Only the title overlaps the image, at its TOP-right corner - the
+   row is top-aligned and just the title (not its siblings) gets
+   pulled left into the image via negative margin, and nudged down a
+   touch so its own top sits just inside the image rather than flush
+   with (or above) the image's top edge. Subtitle is a normal sibling
+   of the title within .case-study-hero__content, landing right under
+   it, clear of the image. The meta list is its own sibling of the
+   image, absolutely positioned so its bottom lines up with the
+   image's bottom - independent of how tall the subtitle ends up. */
+.case-study-hero {
+  display: flex;
+  align-items: flex-start;
+  margin-top: 2rem;
+  position: relative;
+}
+
+.case-study-hero__image {
+  flex: 0 0 60%;
+  height: clamp(320px, 42vw, 520px);
+  background-color: var(--card-bg-strong);
+  overflow: hidden;
+  transform-origin: top;
+  transform: scaleY(0);
+  position: relative;
+  z-index: 1;
+}
+
+.case-study-hero__content {
+  flex: 1 1 auto;
+  padding-left: 1.5rem;
+  position: relative;
+  z-index: 2;
+}
+
+.case-study-hero__title {
+  justify-content: flex-start;
+  font-size: clamp(2.5rem, 7vw, 5.5rem);
+  white-space: nowrap;
+  margin-left: -10rem;
+  margin-top: 2.5rem;
+}
+
+.case-study-hero__subtitle {
+  text-align: left;
+  max-width: 320px;
+  margin-top: 1rem;
+}
+
+.case-study-hero__meta {
+  position: absolute;
+  left: calc(60% + 1.5rem);
+  bottom: 0;
+  max-width: 360px;
+}
+
+/* ---------- Prev / next project pager ----------
+   NEXT (and BACK, once a project exists to link to) is sized like a
+   page title and overlaps its own preview image, the same
+   heading-over-image trick as elsewhere on this page. */
+.case-study-pager {
+  margin: 6rem 0 2rem;
+}
+
+/* First project in the series has no BACK link - when only NEXT is
+   present, push its card to the right instead of leaving it stranded
+   left, while the label itself still reads left-aligned within it.
+   A lone BACK (last project in the series, no NEXT) needs no such
+   push - it already reads correctly on the left. */
+.case-study-pager-previews > .case-study-pager-preview--next:only-child {
+  margin-left: auto;
+}
+
+.case-study-pager__label {
+  font-family: var(--font-heading);
+  font-size: clamp(2.5rem, 7vw, 5.5rem);
+  text-decoration: none;
+  color: var(--text-color);
+  transition: transform 0.3s ease;
+}
+
+.case-study-pager-preview:hover .case-study-pager__label {
+  transform: translateX(2.5rem);
+}
+
+/* BACK reads backwards - right-aligned over its image (opposite of
+   NEXT's default left alignment) and slides further left/away on
+   hover instead of right. */
+.case-study-pager-preview--back:hover .case-study-pager__label {
+  transform: translateX(-2.5rem);
+}
+
+.case-study-pager-previews {
+  display: flex;
+  justify-content: space-between;
+  gap: 3rem;
+  margin: 3rem 0 6rem;
+}
+
+.case-study-pager-preview {
+  flex: 1;
+  max-width: 46%;
+  text-decoration: none;
+  color: var(--text-color);
+  display: block;
+}
+
+.case-study-pager-preview .story-overlap {
+  margin-bottom: 1.5rem;
+}
+
+.case-study-pager-preview__lede {
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+  max-width: 68%;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .case-study-hero {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .case-study-hero__image {
+    flex-basis: auto;
+    height: 320px;
+  }
+
+  .case-study-hero__content {
+    padding-left: 0;
+    margin-top: 2rem;
+  }
+
+  .case-study-hero__title {
+    margin-left: 0;
+    margin-top: 0;
+  }
+
+  /* The image no longer defines the row's height once stacked, so
+     bottom-aligning to it stops making sense - fall back to a normal
+     stacked block. */
+  .case-study-hero__meta {
+    position: static;
+    max-width: none;
+    margin-top: 2rem;
+  }
+
+  .case-study-pager-previews {
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .case-study-pager-preview {
+    max-width: 100%;
+  }
+}

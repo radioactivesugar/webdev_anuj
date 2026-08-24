@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!--
+    CASE STUDY PAGE: Intermission // Investment Chart (Lightrock)
+    Built on the shared case-study design system: css/style.css +
+    css/story.css + css/case-study.css + css/case-study-alt.css (the
+    shared "alternate layout" family also used by undersea-cables.html
+    and revenue-growth.html), plus js/common.js, js/story.js,
+    js/case-study.js.
+    Series order: project.html -> undersea-cables.html -> bajaj-finance.html -> lightrock.html -> revenue-growth.html
+  -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Intermission // Investment Chart - Anuj Debnath</title>
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/story.css">
+  <link rel="stylesheet" href="css/contact.css">
+  <link rel="stylesheet" href="css/case-study.css">
+  <link rel="stylesheet" href="css/case-study-alt.css">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+</head>
+<body>
+
+  <!-- ============ SITE HEADER ============ -->
+  <header class="site-header">
+    <a href="index.html" class="site-header__brand">Anuj<br>Debnath</a>
+    <nav class="site-nav">
+      <a class="site-nav__link" href="aboutme.html">about me</a>
+      <a class="site-nav__link" href="index.html#works">works</a>
+      <a class="site-nav__link" href="index.html#connect">connect</a>
+    </nav>
+  </header>
+
+  <!-- ============ CASE STUDY HERO ============ -->
+  <section id="case-study-hero" class="section">
+    <div class="case-study-hero">
+      <div class="case-study-hero__image" id="caseStudyHeroImage"></div>
+
+      <div class="case-study-hero__content">
+        <h1 class="section-title case-study-hero__title" id="case-study-title">INVESTMENT CHART</h1>
+        <p class="story-text__lede case-study-hero__subtitle">A royal family's billion-dollar bet on Indian startups — without a winner.</p>
+      </div>
+
+      <div class="meta-list case-study-hero__meta">
+        <span>09/04/2026</span>
+        <span>Duration: 1 Week</span>
+        <span>Writer: Mrunmayee Kulkarni</span>
+        <span>Information Design, Web Development</span>
+        <span>eCharts, iFrame, CSS, JavaScript, Figma, GitHub, Google Gemini</span>
+        <span>Live link: <a href="#">Intermission/Lightrock</a></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STORY CONTENT ============ -->
+  <section class="section case-study-story">
+
+    <!-- Intro -->
+    <div class="story-block">
+      <div class="story-text">
+        <p class="story-text__lede">"VC firm Lightrock used the Liechtenstein dynasty's fortune to prop up Waycool, Pharmeasy, and Dunzo. Then it slid into irrelevance."</p>
+        <p class="story-text__body">The story tracked the scale of investment by Lightrock, a single investment firm, into a portfolio of companies over several years — examining how aggressively it deployed capital during the zero-interest-rate-policy (ZIRP) era, and how sharply that activity dropped off afterward.</p>
+        <p class="story-text__body">The valuations and growth trajectories of the companies in its portfolio sat at the centre of the narrative.</p>
+      </div>
+      <div class="story-image"></div>
+    </div>
+
+    <!-- Data -->
+    <h2 class="section-title story-heading story-heading--data">DATA</h2>
+    <div class="story-text-block">
+      <p class="story-text__lede">The data provided was broken down into 2 layers of information to make it digestible for the readers.</p>
+    </div>
+    <div class="story-columns">
+      <div>
+        <p class="story-text__lede">Primary Layer<br>of data</p>
+        <p class="story-text__body">Legible without any interaction.</p>
+      </div>
+      <div>
+        <p class="story-text__body">The spread of companies Lightrock invested in, grouped by year</p>
+        <p class="story-text__body">The industry each company belonged to</p>
+      </div>
+      <div>
+        <p class="story-text__lede">Secondary Layer<br>of data</p>
+        <p class="story-text__body">revealed on hover</p>
+      </div>
+      <div>
+        <p class="story-text__body">The nature and scale of each individual investment</p>
+        <p class="story-text__body">Valuation growth and total funding raised by the company</p>
+      </div>
+    </div>
+    <div class="story-image"></div>
+
+    <!-- Design -->
+    <h2 class="section-title story-heading story-heading--design">DESIGN</h2>
+    <div class="story-image story-image--full"></div>
+
+    <div class="story-columns">
+      <div class="story-columns__spacer story-columns__spacer--wide" aria-hidden="true"></div>
+      <div>
+        <p class="story-text__lede">Rather than a bar graph or a simple bubble chart, I built a clustered bubble chart. This gave the visualisation a sense of dimension per company.</p>
+        <p class="story-text__body"><strong>Bubble size</strong> mapped to the company's valuation scale (under $100M, $100M–$500M, $500M+)</p>
+        <p class="story-text__body"><strong>In-bubble label</strong> Lightrock's actual investment amount, where disclosed</p>
+        <div class="story-image story-stack-image"></div>
+      </div>
+    </div>
+
+    <div class="story-columns">
+      <div class="story-columns__spacer" aria-hidden="true"></div>
+      <div>
+        <p class="story-text__lede">Hover state — surfaces company-level detail</p>
+        <p class="story-text__body">Surfaces company name, latest valuation, total funding raised, and Lightrock's investment amount.</p>
+        <div class="story-image story-stack-image"></div>
+      </div>
+    </div>
+
+    <div class="story-text-block">
+      <p class="story-text__lede">The final visualisation was embedded into the story via an iframe, and published on 16th April.</p>
+    </div>
+    <div class="story-iframe-wrapper">
+      <iframe class="story-iframe" src="prototypes/Lightrock_Investment_Chart_Arundhati/index.html" title="Investment Chart - interactive visualisation" loading="lazy"></iframe>
+    </div>
+  </section>
+
+  <!-- ============ BACK / NEXT PROJECT PAGER ============ -->
+  <section class="section case-study-pager">
+    <div class="case-study-pager-previews">
+      <a href="bajaj-finance.html" class="case-study-pager-preview case-study-pager-preview--back">
+        <div class="story-overlap">
+          <span class="section-title case-study-pager__label story-overlap__heading back-header">BACK</span>
+          <div class="story-image"></div>
+        </div>
+        <p class="case-study-pager-preview__lede">Bajaj Finance: A Bank in All But Name &mdash; the story of a family business split, and the branch that grew into a lending giant.</p>
+        <div class="meta-list">
+          <span>17/09/2026</span>
+          <span>The-Ken/Intermission</span>
+          <span>eCharts, GSAP, CSS, JavaScript, Figma, GitHub, Google Gemini, Claude Code</span>
+        </div>
+      </a>
+
+      <a href="revenue-growth.html" class="case-study-pager-preview case-study-pager-preview--next">
+        <div class="story-overlap">
+          <span class="section-title case-study-pager__label story-overlap__heading next-header">NEXT</span>
+          <div class="story-image"></div>
+        </div>
+        <p class="case-study-pager-preview__lede">Revenue Growth: at RBI-licensed NBFCs, 600% annual interest is board-approved, "reasonable," and perfectly legal.</p>
+        <div class="meta-list">
+          <span>09/04/2026</span>
+          <span>The-Ken/Intermission</span>
+          <span>eCharts, iFrame, CSS, JavaScript, Figma, GitHub, Google Gemini, Claude Code</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <section class="section contact-section">
+    <div class="contact-details">
+      <a class="contact-details__line" href="tel:+910000000000">+91 00000 00000</a>
+      <a class="contact-details__line" href="mailto:hello@anujdebnath.com">hello@anujdebnath.com</a>
+    </div>
+
+    <div class="contact-social-row">
+      <a class="link-arrow" href="#" target="_blank" rel="noopener">Instagram &#8599;</a>
+      <a class="link-arrow" href="#" target="_blank" rel="noopener">Telegram &#8599;</a>
+      <a class="link-arrow" href="#" target="_blank" rel="noopener">Facebook &#8599;</a>
+    </div>
+
+    <div class="footer-columns">
+      <ul class="footer-nav">
+        <li><a class="footer-nav__link" href="aboutme.html">About Me</a></li>
+        <li><a class="footer-nav__link" href="#">Services</a></li>
+        <li><a class="footer-nav__link" href="index.html#works">Works</a></li>
+      </ul>
+
+      <address class="footer-address">
+        Address:<br>
+        Bengaluru,<br>
+        India
+      </address>
+    </div>
+
+    <div class="footer-links-row">
+      <a class="footer-links-row__link" href="#" target="_blank" rel="noopener">[ Dribbble ]</a>
+      <a class="footer-links-row__link" href="#" target="_blank" rel="noopener">[ Behance ]</a>
+      <a class="footer-links-row__link" href="#" target="_blank" rel="noopener">[ LinkedIn ]</a>
+    </div>
+
+    <h2 class="footer-wordmark" id="footer-wordmark">ANUJ DEBNATH</h2>
+  </section>
+
+  <div class="footer-bottom">
+    <span class="footer-bottom__location" id="footerClock">INDIA: (GMT+5:30) --:--</span>
+    <span class="footer-bottom__credit">Design &amp; Development &mdash; Anuj Debnath</span>
+    <span class="footer-bottom__copyright">2026 All Rights Reserved. Anuj Debnath. Any reproduction, distribution, or use of the materials without permission is prohibited.</span>
+  </div>
+
+  <script src="js/common.js"></script>
+  <script src="js/story.js"></script>
+  <script src="js/case-study.js"></script>
+</body>
+</html>

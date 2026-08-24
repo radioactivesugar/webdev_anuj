@@ -1,0 +1,54 @@
+/* =========================================================
+   ITC PROTOTYPES GRID (project.html only)
+   The 3 live QW4K charts from prototypes/ITC/ (shareholding,
+   smoke75, cigarette), embedded via iframe at the end of the
+   story. Grid: the two simpler single-chart pieces sit side by
+   side; the revenue/profit split (which already has 2 sub-charts
+   of its own) gets the full width below so its columns have room
+   to breathe.
+   ========================================================= */
+
+.itc-prototypes-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  margin: 3rem 0 6rem;
+}
+
+.itc-prototype {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+}
+
+.itc-prototype iframe {
+  width: 100%;
+  border: none;
+  display: block;
+}
+
+.itc-prototype:not(.itc-prototype--wide) iframe {
+  height: 760px;
+}
+
+.itc-prototype--wide {
+  grid-column: 1 / -1;
+}
+
+.itc-prototype--wide iframe {
+  height: 950px;
+}
+
+@media (max-width: 900px) {
+  .itc-prototypes-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .itc-prototype:not(.itc-prototype--wide) iframe {
+    height: 640px;
+  }
+
+  .itc-prototype--wide iframe {
+    height: 820px;
+  }
+}

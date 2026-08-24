@@ -1,0 +1,255 @@
+/* =========================================================
+   HERO SECTION  (#about)
+   Ported from landing.html. Class names prefixed "hero-"
+   so they can be referred to unambiguously later.
+   ========================================================= */
+
+.hero-section {
+  min-height: calc(100vh - 120px);
+}
+
+/* Big title overlaying the image block */
+.hero-title-wrapper {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 10;
+  width: 100%;
+  pointer-events: none;
+}
+
+.hero-title {
+  /* inherits .section-title; sized down to match landing.jpg, where
+     DESIGNER reads noticeably smaller/more compact than a full-bleed
+     hero headline. */
+  font-size: clamp(2.5rem, 9vw, 7rem);
+}
+
+.hero-subtitle {
+  font-family: var(--font-caption);
+  letter-spacing: 0.1em;
+  font-weight: 400;
+  text-transform: uppercase;
+  /* landing.jpg shows this almost bleeding into the background */
+  opacity: 0.3;
+}
+
+/* Content layout: image block (left) + interactive nodes (right) */
+.hero-content-grid {
+  display: grid;
+  grid-template-columns: minmax(260px, 26%) 1fr;
+  gap: 4rem;
+  margin-top: -18px;
+  position: relative;
+  z-index: 5;
+}
+
+/* Left image block */
+.hero-image-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.hero-image-card-bg {
+  position: absolute;
+  top: 26px;
+  left: -20px;
+  width: calc(100% + 40px);
+  height: 248px;
+  background-color: #ebebeb;
+  z-index: 1;
+}
+
+.hero-image-mask {
+  position: relative;
+  width: 100%;
+  height: 222px;
+  background-color: var(--card-bg-strong);
+  transform-origin: top;
+  transform: scaleY(0);
+  overflow: hidden;
+  z-index: 2;
+}
+
+.hero-image-mask img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-image-placeholder {
+  width: 100%;
+  height: 100%;
+  background: var(--card-bg-strong);
+}
+
+.hero-image-caption {
+  margin-top: 1.5rem;
+  position: relative;
+  z-index: 2;
+}
+
+.hero-image-caption h3 {
+  font-size: 1.2rem;
+}
+
+.hero-image-caption p {
+  font-family: var(--font-caption);
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+/* Interactive skill nodes.
+   Shares a grid row with the (now shorter) image column, so it needs
+   its own top offset - otherwise the first row of nodes crowds the
+   subtitle above it. */
+.hero-nodes-container {
+  position: relative;
+  min-height: 400px;
+  width: 100%;
+  margin-top: 64px;
+}
+
+.hero-node {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 6px;
+  /* Faded at rest per landing.jpg, full strength on hover below -
+     the opacity transition was already wired up, just never used. */
+  opacity: 0.55;
+  transition: opacity 0.2s;
+}
+
+.hero-node:hover {
+  opacity: 1;
+}
+
+.hero-node__dot {
+  width: 10px;
+  height: 10px;
+  background-color: var(--dot-color);
+  border-radius: 50%;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.hero-node__label {
+  font-family: var(--font-caption);
+  font-size: 0.85rem;
+  color: #333;
+  white-space: nowrap;
+}
+
+/* Scale only - the hover color itself is set inline by js/main.js
+   (data-driven from archiveCategoryColors, one per node), which an
+   inline style always overrides regardless of what's declared here. */
+.hero-node:hover .hero-node__dot {
+  transform: scale(1.6);
+}
+
+/* Floating hover-detail card.
+   No `visibility` toggle here on purpose: mixing visibility with a
+   backdrop-filter element made the very first hover fail to show in
+   some browsers (the compositing layer for the blur wasn't warmed up
+   yet). Opacity + pointer-events alone is reliable from the first hit,
+   and `transform: translateZ(0)` forces that layer to exist from load. */
+.hero-info-card {
+  position: absolute;
+  width: 360px;
+  background: rgba(240, 240, 240, 0.96);
+  border: 1px solid #b5b5b5;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  display: flex;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 30;
+  backdrop-filter: blur(4px);
+  transform: translateZ(0);
+}
+
+.hero-info-card.is-active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.hero-info-card__preview {
+  width: 120px;
+  background-color: #c4c4c4;
+  flex-shrink: 0;
+}
+
+.hero-info-card__content {
+  padding: 1.2rem;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: #222;
+}
+
+.hero-info-card__content p {
+  margin-bottom: 0.8rem;
+}
+
+.hero-info-card__content h4 {
+  font-size: 0.85rem;
+  margin-bottom: 0.4rem;
+}
+
+.hero-info-card__content ul {
+  list-style: none;
+}
+
+.hero-info-card__content ul li {
+  margin-bottom: 0.25rem;
+}
+
+.hero-info-card__content ul li a {
+  color: #000;
+  text-decoration: underline;
+}
+
+.hero-info-card__content ul li a:hover {
+  color: #555;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .hero-content-grid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    margin-top: 80px;
+  }
+
+  .hero-image-wrapper {
+    max-width: 340px;
+    margin: 0 auto;
+  }
+
+  .hero-nodes-container {
+    min-height: 350px;
+  }
+
+  .hero-info-card {
+    position: fixed;
+    bottom: 20px;
+    left: 50% !important;
+    top: auto !important;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 380px;
+  }
+}
+
+@media (max-width: 576px) {
+  .hero-title-wrapper {
+    top: 10px;
+  }
+
+  .hero-node__label {
+    font-size: 0.75rem;
+  }
+}

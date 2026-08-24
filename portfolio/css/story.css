@@ -1,0 +1,452 @@
+/* =========================================================
+   STORY BLOCKS
+   Shared alternating text/image content components used by both
+   aboutme.html and project.html. Every block scrolls into view on
+   its own (see js/story.js) rather than animating all at once -
+   text blocks fade+rise in, image blocks reveal with the same
+   vertical mask used by the hero image on index.html.
+   ========================================================= */
+
+/* Text + image, side by side. Add --reverse to flip which side the
+   image sits on for alternating rhythm down the page. */
+.story-block {
+  display: flex;
+  gap: 3rem;
+  align-items: flex-start;
+  margin: 6rem 0;
+}
+
+.story-block--reverse {
+  flex-direction: row-reverse;
+}
+
+/* Zero out the block's own vertical margin when it's nested inside
+   something that already has its own spacing (a callout, a column). */
+.story-block--flush,
+.story-image-row--flush {
+  margin: 0;
+}
+
+/* Zero out just the top margin - for a block sitting right under a
+   .story-heading, so the heading's own margin-bottom is the only
+   thing setting the gap (letting .story-image--rise's negative
+   margin create real overlap instead of being swallowed by margin
+   collapsing against this block's larger default top margin). */
+.story-block--flush-top {
+  margin-top: 0;
+}
+
+.story-text {
+  flex: 0 0 38%;
+  min-width: 260px;
+}
+
+.story-block .story-image {
+  flex: 1 1 auto;
+}
+
+/* When the image side of a .story-block is wrapped in .story-overlap
+   (heading-over-image), the wrapper takes the flex slot instead. */
+.story-block .story-overlap {
+  flex: 1 1 auto;
+}
+
+/* Text-only block (no image partner), same column width as .story-text */
+.story-text-block {
+  max-width: 560px;
+  margin: 6rem 0;
+}
+
+.story-text-block--indent {
+  margin-left: 8%;
+}
+
+.story-text__lede {
+  font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+}
+
+/* Extra breathing room above a closing/standalone lede that follows
+   regular body paragraphs in the same column (e.g. INTEGRATION). */
+.story-text__lede--spaced {
+  margin-top: 3rem;
+}
+
+.story-text__body {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--text-muted);
+}
+
+.story-text__body + .story-text__body {
+  margin-top: 1.25rem;
+}
+
+/* Image placeholder box. Mask-revealed via scaleY (js/story.js),
+   same technique as the hero image on index.html. */
+.story-image {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background-color: var(--card-bg-strong);
+  overflow: hidden;
+  transform-origin: top;
+}
+
+.story-image--full {
+  aspect-ratio: 21 / 9;
+  margin: 6rem 0;
+}
+
+.story-image--tall {
+  aspect-ratio: 3 / 4;
+}
+
+.story-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Two or three images side by side */
+.story-image-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem;
+  margin: 6rem 0;
+}
+
+.story-image-row .story-image {
+  flex: 1;
+}
+
+/* Small thumbnail grid, e.g. a gallery/photo strip */
+.story-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  margin: 6rem 0;
+}
+
+.story-gallery-grid .story-image {
+  aspect-ratio: 1 / 1;
+}
+
+/* Slight vertical offset on alternating tiles for the scattered,
+   editorial-contact-sheet look from the reference mockups. */
+.story-gallery-grid .story-image:nth-child(4n+2),
+.story-gallery-grid .story-image:nth-child(4n+3) {
+  margin-top: 3.5rem;
+}
+
+/* Side-by-side image + small caption label underneath, e.g. "Prompt" / "Result" */
+.story-image-caption-group {
+  flex: 1;
+}
+
+.story-image-label {
+  font-family: var(--font-caption);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 0.75rem;
+}
+
+/* Two plain text columns side by side (no image), e.g. the SCRIPT
+   and EXPLORATIONS sections' paired paragraphs. Same gap as
+   .story-image-row on purpose - when a 3-up column row sits directly
+   above a 3-up image row (or vice versa), matching flex ratios AND
+   matching gaps is what actually lines their edges up. */
+.story-columns {
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem;
+  margin: 3rem 0 6rem;
+}
+
+.story-columns > div {
+  flex: 1;
+}
+
+/* Narrower fixed-width spacer column (vs. the default flex:1 third) -
+   for rows where the content column should start further left and
+   be wider than an even three-way split, e.g. INTEGRATION. */
+.story-columns > .story-columns__spacer {
+  flex: 0 0 24%;
+}
+
+/* Mid-page section heading (SCRIPT / EXPLORATIONS / Q&A / ...).
+   Split into .letter spans and animated with the same drop-in as the
+   page's main title (js/story.js) - inherits .section-title's flex/
+   nowrap/overflow, which is what makes that masking work; only the
+   alignment is overridden here. position/z-index keep it visible
+   above an image that rises to overlap it (.story-image--rise). */
+/* Shared visual look only - no position/margin here, so each
+   heading's own placement (below) can be tuned independently without
+   touching the others. */
+.story-heading {
+  justify-content: flex-start;
+  font-size: clamp(2.25rem, 6vw, 4rem);
+  position: relative;
+  z-index: 2;
+}
+
+/* ---------------------------------------------------------
+   Individual per-heading placement.
+   Normal-flow headings (SCRIPT / EXPLORATIONS / DESIGN SYSTEM) are
+   positioned with margin; each has its own value to tune.
+   ---------------------------------------------------------- */
+.story-heading--script {
+  margin: 5rem 0 2.5rem;
+}
+
+.story-heading--explorations {
+  margin: 5rem 0 2.5rem;
+}
+
+.story-heading--design-system {
+  margin: calc(5rem + 30vh) 0 -0.5rem;
+}
+
+.story-heading--data {
+  margin: 5rem 0 2.5rem;
+}
+
+.story-heading--prototypes {
+  margin: 5rem 0 2.5rem;
+}
+
+.story-heading--design {
+  margin: calc(5rem + 30vh) 0 -0.5rem;
+}
+
+.next-header{
+    top: -38px;
+}
+
+/* Twin of .next-header - same overlap-position fix, for a BACK
+   pager label (see .case-study-pager-preview--back). BACK reads
+   backwards, so it's anchored to the right edge of its image
+   instead of NEXT's default left, with the letters themselves
+   right-aligned within that box. */
+.back-header {
+  top: -38px;
+  left: auto;
+  right: 0;
+  justify-content: flex-end;
+  text-align: right;
+}
+
+/* Pulls an image up to tuck slightly under a heading that sits right
+   above it (DESIGN SYSTEM). Combine with .story-image--parallax for
+   a little scroll-linked drift. */
+.story-image--rise {
+  margin-top: -7rem;
+}
+
+/* Bottom-align a .story-block's columns instead of the default top -
+   e.g. when the text column should sit level with the bottom of a
+   much taller image beside it. */
+.story-block--align-end {
+  align-items: flex-end;
+}
+
+/* Wrapper for a heading that sits literally on top of an image -
+   INTEGRATION (heading over the image below it) and Q&A (heading
+   over the image row above it). The wrapper itself is shared
+   structure; each heading's own top/left/bottom/right below is what
+   actually positions it, independently of the others. */
+.story-overlap {
+  position: relative;
+}
+
+.story-overlap__heading {
+  position: absolute;
+  z-index: 3;
+  margin: 0;
+  pointer-events: none;
+}
+
+.story-heading--qa {
+  top: auto;
+  left: 0;
+  bottom: -2.5rem;
+}
+
+.story-heading--integration {
+  top: 0;
+  left: auto;
+  right: 54px;
+  text-align: right;
+  justify-content: flex-end;
+}
+
+/* Scroll-linked parallax target (see js/case-study.js) - only applied
+   to images that visually overlap a heading/text. */
+.story-image--parallax {
+  will-change: transform;
+}
+
+/* Device-proportioned placeholders, e.g. the Q&A section's two
+   screenshots (one phone, one tablet). */
+.story-image--mobile {
+  aspect-ratio: 9 / 19;
+}
+
+.story-image--ipad {
+  aspect-ratio: 3 / 4;
+}
+
+/* Small inline icon, e.g. the Gemini/Claude marks in a callout -
+   inherits the surrounding text's color via currentColor. */
+.callout-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.15em;
+  vertical-align: -0.15em;
+}
+
+/* Quote/aside callout - dark (Gemini) or warm (Claude) variant */
+.story-callout {
+  padding: 2rem 2.25rem;
+  border-radius: 8px;
+  margin: 3rem 0 6rem;
+}
+
+.story-callout--dark {
+  max-width: 620px;
+  background: linear-gradient(160deg, #2f2b52, #23213f);
+  color: #f1eef9;
+  box-shadow: 0 16px 40px rgba(30, 20, 60, 0.25);
+}
+
+.story-callout--warm {
+  background: linear-gradient(135deg, #fff8ec, #ffe4b8);
+}
+
+.story-callout .story-text__lede,
+.story-callout .story-text__body {
+  color: inherit;
+}
+
+.story-callout--dark .story-text__body {
+  color: #cfc9e6;
+}
+
+.story-callout--warm .story-text__body {
+  color: var(--text-muted);
+}
+
+/* Highlighted phrase within a callout - background adapts to theme */
+.hl {
+  border-radius: 3px;
+  padding: 0 0.2em;
+}
+
+.story-callout--dark .hl {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.story-callout--warm .hl {
+  background: rgba(230, 140, 30, 0.28);
+}
+
+/* Named accent keyword, e.g. "Google Gemini" / "Claude Code" */
+.accent-purple {
+  color: #b6a4f2;
+  font-weight: 400;
+}
+
+.accent-orange {
+  color: #b8560f;
+  font-weight: 400;
+}
+
+/* Inline code-ish token, e.g. `prompt.md` */
+.inline-code {
+  font-family: var(--font-caption);
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 3px;
+  padding: 0.05em 0.35em;
+  font-size: 0.92em;
+}
+
+.story-callout--dark .inline-code {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .story-columns {
+    flex-direction: column;
+    gap: 2rem;
+    margin: 2rem 0 4rem;
+  }
+
+  /* The overlap effect is a desktop flourish - on mobile the block
+     it sits over stacks (text above image), so an absolutely
+     positioned heading would land on the wrong sibling. Fall back
+     to a normal stacked heading instead. */
+  .story-overlap__heading {
+    position: static;
+    margin: 0 0 2rem;
+    text-align: left;
+    justify-content: flex-start;
+  }
+
+  .story-image--rise {
+    margin-top: 0;
+  }
+
+  .story-callout {
+    padding: 1.5rem;
+    margin: 2rem 0 4rem;
+  }
+
+  .story-block,
+  .story-block--reverse {
+    flex-direction: column;
+    gap: 2rem;
+    margin: 4rem 0;
+  }
+
+  .story-text {
+    flex-basis: auto;
+    min-width: 0;
+  }
+
+  .story-image-row {
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: 4rem 0;
+  }
+
+  .story-image--full {
+    margin: 4rem 0;
+  }
+
+  .story-gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+    margin: 4rem 0;
+  }
+
+  .story-gallery-grid .story-image:nth-child(4n+2),
+  .story-gallery-grid .story-image:nth-child(4n+3) {
+    margin-top: 0;
+  }
+
+  .story-text-block--indent {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Multi-word headings (e.g. "DESIGN SYSTEM") stay on one nowrap line
+     at any size - shrink further here so they don't clip off-screen. */
+  .story-heading {
+    font-size: clamp(1.5rem, 8vw, 2.25rem);
+  }
+}

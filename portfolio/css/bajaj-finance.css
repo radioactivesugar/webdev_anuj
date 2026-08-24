@@ -1,0 +1,12 @@
+/* =========================================================
+   BAJAJ FINANCE (page-specific)
+   This page follows the shared case-study layout almost exactly
+   (css/story.css + css/case-study.css) - the only wrinkle is the
+   SCRIPT section's single image, which sits nested inside a text
+   column instead of its own row/block, so it needs its own top
+   margin the shared components don't provide.
+   ========================================================= */
+
+.story-image--inline-column {
+  margin-top: 2rem;
+}

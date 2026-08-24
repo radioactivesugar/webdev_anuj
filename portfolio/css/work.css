@@ -1,0 +1,387 @@
+/* =========================================================
+   WORK SECTION  (#works)
+   Contains: Featured Work grid (new) + Archive timeline
+   (ported from timeline.html, prefixed "archive-").
+   ========================================================= */
+
+.work-section {
+  padding-top: 2rem;
+}
+
+/* ---------- Featured work grid ---------- */
+.work-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, minmax(220px, 1fr));
+  gap: 4px;
+}
+
+.work-card {
+  background-color: var(--card-bg-alt);
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  transform-origin: top;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  /* .work-card--primary is an <a> (links to project.html); the rest
+     are still <article> - color/text-decoration reset is harmless on
+     those since neither property does anything on a non-link element. */
+  color: inherit;
+  text-decoration: none;
+}
+
+.work-card:hover {
+  background-color: #cfcfcf;
+}
+
+.work-card--primary {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+}
+
+.work-card--tall {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.work-card--tall-alt {
+  grid-column: 3;
+  grid-row: 1;
+}
+
+.work-card--short {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.work-card--short-alt {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+.work-card__title {
+  font-size: 1.15rem;
+  position: relative;
+  z-index: 2;
+}
+
+.work-card__meta {
+  font-family: var(--font-caption);
+  font-size: 0.7rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+  position: relative;
+  z-index: 2;
+}
+
+/* Each line (date / org / stack) is a <span> - block so it actually
+   sits on its own line instead of all running into one sentence, and
+   so margin-top between them has any effect at all (vertical margins
+   do nothing on inline elements). */
+.work-card__meta > * {
+  display: block;
+}
+
+.work-card__meta > * + * {
+  margin-top: 0.5rem;
+}
+
+/* The primary card's bio is always visible; the rest reveal theirs
+   on hover, same idea as the archive gallery's card-info reveal. */
+.work-card:not(.work-card--primary) .work-card__meta {
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.work-card:not(.work-card--primary):hover .work-card__meta {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---------- Archive timeline (from timeline.html) ---------- */
+.archive-block {
+  margin-top: 5rem;
+}
+
+.archive-title {
+  font-size: 1.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.archive-chart-wrapper {
+  position: relative;
+  width: 100%;
+  height: 260px;
+  background-color: var(--section-header-bg);
+  border-radius: 4px;
+}
+
+.archive-chart {
+  width: 100%;
+  height: 100%;
+}
+
+/* Floating contextual tooltip */
+.archive-tooltip {
+  position: absolute;
+  width: 230px;
+  background: #e8e8e8;
+  border: 1px solid var(--line-color);
+  padding: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  pointer-events: none;
+  opacity: 0;
+  z-index: 1000;
+  transition: opacity 0.3s ease;
+  font-family: var(--font-caption);
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--line-color);
+}
+
+.archive-tooltip.is-active {
+  opacity: 1;
+}
+
+/* Share/open-link icon - top right corner of the tooltip. The
+   tooltip itself is pointer-events:none (it's a hover-follow
+   element, not meant to intercept clicks meant for the chart under
+   it), but this one icon opts back in so it's actually clickable -
+   see the sticky-hover check in js/main.js that keeps the tooltip
+   from vanishing the moment the cursor leaves the chart bubble en
+   route to this icon. Hidden entirely (display:none) for projects
+   with no link - see updateArchiveTooltipContent() in js/main.js. */
+.archive-tooltip__link {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--line-color);
+  pointer-events: auto;
+  opacity: 0.65;
+  transition: opacity 0.15s ease;
+}
+
+.archive-tooltip__link:hover {
+  opacity: 1;
+}
+
+.archive-tooltip__link-icon {
+  width: 13px;
+  height: 13px;
+}
+
+/* .archive-tooltip__title is an <h2>, so it gets the heading font
+   automatically (a class-level rule can't set font-family here without
+   overriding that on purpose - only size/color are overridden). */
+.archive-tooltip__title {
+  font-size: 18px;
+  margin-bottom: 2px;
+  padding-right: 22px;
+  color: #000;
+}
+
+.archive-tooltip__subtitle {
+  color: var(--text-faint);
+  font-size: 10px;
+  margin-bottom: 12px;
+}
+
+.archive-tooltip__divider {
+  height: 1px;
+  background-color: var(--line-color);
+  margin: 10px 0;
+}
+
+.archive-tooltip__date {
+  margin-bottom: 6px;
+  color: var(--line-color);
+}
+
+.archive-tooltip__org {
+  margin-bottom: 6px;
+}
+
+.archive-tooltip__stack {
+  color: #515154;
+  font-size: 10px;
+  line-height: 1.3;
+}
+
+/* Category filter nav with legend dots */
+.archive-filter-nav {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin: 30px 0 50px 0;
+  flex-wrap: wrap;
+}
+
+.archive-filter-btn {
+  background: none;
+  border: none;
+  font-size: 14px;
+  color: #86868b;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-caption);
+}
+
+.archive-filter-btn__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.archive-filter-btn:hover {
+  color: var(--line-color);
+}
+
+.archive-filter-btn.is-active {
+  color: var(--line-color);
+  border-bottom: 2px solid var(--line-color);
+}
+
+/* Gallery frame */
+.archive-gallery-wrapper {
+  position: relative;
+  width: 100%;
+  min-height: 380px;
+  overflow: hidden;
+  display: flex;
+}
+
+.archive-gallery-track {
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+  width: 100%;
+  will-change: transform;
+}
+
+.archive-card {
+  flex: 0 0 20%;
+  margin-right: -7%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  opacity: 1;
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
+  will-change: transform, filter;
+  filter: grayscale(100%);
+  transition: filter 0.65s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.archive-card.is-hidden {
+  display: none !important;
+}
+
+.archive-card__image-box {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  background-color: var(--card-bg-strong);
+  border: none;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  border-radius: 3px;
+}
+
+.archive-card__image-box::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: #ffffff;
+  opacity: 0.45;
+  transition: opacity 0.65s cubic-bezier(0.25, 1, 0.5, 1);
+  pointer-events: none;
+}
+
+.archive-card__image-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  opacity: 1;
+}
+
+.archive-card__info {
+  opacity: 0;
+  transform: translateY(6px);
+  transition: all 0.4s ease;
+  font-size: 13px;
+  text-align: left;
+}
+
+.archive-card__info h3 {
+  font-size: 14px;
+  color: var(--line-color);
+}
+
+.archive-card.is-active {
+  z-index: 100 !important;
+  filter: grayscale(0%);
+}
+
+.archive-card.is-active .archive-card__image-box::after {
+  opacity: 0;
+}
+
+.archive-card.is-active .archive-card__info {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .work-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: auto;
+  }
+
+  .work-card--primary {
+    grid-column: 1 / span 2;
+    grid-row: 1;
+    min-height: 280px;
+  }
+
+  .work-card--tall,
+  .work-card--tall-alt,
+  .work-card--short,
+  .work-card--short-alt {
+    grid-column: auto;
+    grid-row: auto;
+    min-height: 200px;
+  }
+}
+
+@media (max-width: 576px) {
+  .work-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .work-card--primary {
+    grid-column: 1;
+  }
+
+  .archive-filter-nav {
+    gap: 14px;
+  }
+}
