@@ -113,12 +113,21 @@
   margin-bottom: 1.5rem;
 }
 
+/* Full-width grey panel behind the legend, the timeline, and the
+   picture gallery - one continuous background rather than the chart
+   alone having it, spanning the same width as everything else in
+   this section. */
+.archive-panel {
+  width: 100%;
+  background-color: var(--section-header-bg);
+  border-radius: 4px;
+  padding: 2rem 2rem 2.5rem;
+}
+
 .archive-chart-wrapper {
   position: relative;
   width: 100%;
   height: 260px;
-  background-color: var(--section-header-bg);
-  border-radius: 4px;
 }
 
 .archive-chart {
@@ -217,12 +226,13 @@
   line-height: 1.3;
 }
 
-/* Category filter nav with legend dots */
+/* Category filter nav with legend dots - now sits above the timeline
+   (was below it), so it only needs bottom spacing before the chart. */
 .archive-filter-nav {
   display: flex;
   justify-content: center;
   gap: 24px;
-  margin: 30px 0 50px 0;
+  margin: 0 0 30px 0;
   flex-wrap: wrap;
 }
 
