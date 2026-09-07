@@ -4,8 +4,14 @@
    so they can be referred to unambiguously later.
    ========================================================= */
 
+/* padding-bottom override cuts down the base .section's 6rem - now
+   that the Archive timeline (with its own gallery) moved in here, the
+   hero's content usually exceeds min-height, so that padding started
+   reading as a real, oversized gap before WORK instead of empty space
+   min-height was already covering. */
 .hero-section {
   min-height: calc(100vh - 120px);
+  padding-bottom: 2rem;
 }
 
 /* Big title overlaying the image block */
@@ -34,30 +40,56 @@
   text-transform: uppercase;
   /* landing.jpg shows this almost bleeding into the background */
   opacity: 0.3;
+  /* Sits below DESIGNER, positioned so the "A" ending INDIA lines up
+     with the left edge of the "R" ending DESIGNER - not the section/
+     container edge. .hero-title is centered within the full-width
+     .hero-title-wrapper (css `.section-title`), so its rendered
+     position shifts with viewport width/font-size and can't be
+     reached with CSS alone; js/main.js measures both on load/resize
+     and sets `left` here in pixels. The 0 below is just a same-frame
+     fallback before that first measurement runs. */
+  position: absolute;
+  left: 0;
+  top: 100%;
+  transform: translateY(10px);
+  text-align: left;
+  margin-top: 0;
+  white-space: nowrap;
 }
 
-/* Content layout: image block (left) + interactive nodes (right) */
+/* Content layout: just the image block now - the interactive nodes
+   that used to share this row moved out (the Archive timeline, moved
+   up from the WORK section below, replaces them as the hero's
+   interactive content - see .archive-block further down). */
 .hero-content-grid {
-  display: grid;
-  grid-template-columns: minmax(260px, 26%) 1fr;
-  gap: 4rem;
   margin-top: -18px;
   position: relative;
   z-index: 5;
 }
 
-/* Left image block */
+/* Image block - capped to roughly its old grid-column width so it
+   reads as a compact card rather than stretching full width now that
+   it's the row's only content. Narrower and taller than the original
+   landing.jpg proportions (more of a portrait card than a landscape
+   one) - the grey backdrop (.hero-image-card-bg) is sized to still
+   fully contain the caption below the image, not just the image
+   itself. Shifted right with margin-left so it tucks in under
+   DESIGNER (the title sits on top, z-index 10 vs this row's 5) -
+   purely a visual offset, so it doesn't add to the row's flow height
+   or push .archive-block down. */
 .hero-image-wrapper {
   position: relative;
   width: 100%;
+  max-width: 260px;
+  margin-left: 155px;
 }
 
 .hero-image-card-bg {
   position: absolute;
   top: 26px;
-  left: -20px;
-  width: calc(100% + 40px);
-  height: 248px;
+  left: -16px;
+  width: calc(100% + 32px);
+  height: 360px;
   background-color: #ebebeb;
   z-index: 1;
 }
@@ -65,12 +97,15 @@
 .hero-image-mask {
   position: relative;
   width: 100%;
-  height: 222px;
+  height: 300px;
   background-color: var(--card-bg-strong);
-  transform-origin: top;
-  transform: scaleY(0);
   overflow: hidden;
   z-index: 2;
+  /* Reveal via clip-path (js/main.js), not a scaleY transform - a
+     scaled box stretches everything inside it, including the img,
+     which briefly renders squashed. Clipping just shows/hides
+     progressively more of the already-full-size image instead. */
+  clip-path: inset(0% 0% 100% 0%);
 }
 
 .hero-image-mask img {
@@ -101,54 +136,16 @@
   color: var(--text-muted);
 }
 
-/* Interactive skill nodes.
-   Shares a grid row with the (now shorter) image column, so it needs
-   its own top offset - otherwise the first row of nodes crowds the
-   subtitle above it. */
-.hero-nodes-container {
-  position: relative;
-  min-height: 400px;
-  width: 100%;
-  margin-top: 64px;
-}
-
-.hero-node {
-  position: absolute;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
-  padding: 6px;
-  /* Faded at rest per landing.jpg, full strength on hover below -
-     the opacity transition was already wired up, just never used. */
-  opacity: 0.55;
-  transition: opacity 0.2s;
-}
-
-.hero-node:hover {
-  opacity: 1;
-}
-
-.hero-node__dot {
-  width: 10px;
-  height: 10px;
-  background-color: var(--dot-color);
-  border-radius: 50%;
-  transition: transform 0.3s ease, background-color 0.3s ease;
-}
-
-.hero-node__label {
-  font-family: var(--font-caption);
-  font-size: 0.85rem;
-  color: #333;
-  white-space: nowrap;
-}
-
-/* Scale only - the hover color itself is set inline by js/main.js
-   (data-driven from archiveCategoryColors, one per node), which an
-   inline style always overrides regardless of what's declared here. */
-.hero-node:hover .hero-node__dot {
-  transform: scale(1.6);
+/* Taller image (above) means this row's flow height grew, which would
+   otherwise push the Archive timeline further down than it used to
+   sit - this negative margin (overriding .archive-block's own 3rem in
+   css/work.css - two classes beats one, no !important needed) pulls
+   it back up to that original position. Only .archive-panel's own
+   3rem top padding sits between this box's top edge and the actual
+   chart content, so the overlap here is empty space, not a visual
+   collision with the caption above it. */
+.hero-section .archive-block {
+  margin-top: -30px;
 }
 
 /* Floating hover-detail card.
@@ -156,19 +153,28 @@
    backdrop-filter element made the very first hover fail to show in
    some browsers (the compositing layer for the blur wasn't warmed up
    yet). Opacity + pointer-events alone is reliable from the first hit,
-   and `transform: translateZ(0)` forces that layer to exist from load. */
+   and `transform: translateZ(0)` forces that layer to exist from load.
+   --glow (set inline by js/main.js, per hovered node's category
+   color) tints the card's own shadow to match - falls back to
+   transparent (no glow) if that custom property is never set. */
 .hero-info-card {
   position: absolute;
   width: 360px;
-  background: rgba(240, 240, 240, 0.96);
-  border: 1px solid #b5b5b5;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  background-color: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    0 0 18px 0 var(--glow, transparent);
   display: flex;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease, box-shadow 0.3s ease;
   z-index: 30;
-  backdrop-filter: blur(4px);
   transform: translateZ(0);
 }
 
@@ -177,14 +183,27 @@
   pointer-events: auto;
 }
 
-.hero-info-card__preview {
-  width: 120px;
-  background-color: #c4c4c4;
-  flex-shrink: 0;
+/* Category icon (js/main.js's heroNodeIcons) - top-right corner of
+   the card, same placement idea as the Archive tooltip's own
+   top-right link icon, rather than a large left-side preview panel.
+   Colored via currentColor - js/main.js sets this element's own
+   `color` to the hovered node's category color. */
+.hero-info-card__icon {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 22px;
+  height: 22px;
+  z-index: 1;
+}
+
+.hero-info-card__icon svg {
+  width: 100%;
+  height: 100%;
 }
 
 .hero-info-card__content {
-  padding: 1.2rem;
+  padding: 1.2rem 2.75rem 1.2rem 1.2rem;
   font-size: 0.8rem;
   line-height: 1.4;
   color: #222;
@@ -205,11 +224,23 @@
 
 .hero-info-card__content ul li {
   margin-bottom: 0.25rem;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
 }
 
 .hero-info-card__content ul li a {
   color: #000;
   text-decoration: underline;
+}
+
+.hero-info-card__date {
+  font-family: var(--font-caption);
+  font-size: 0.7rem;
+  color: var(--text-faint);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .hero-info-card__content ul li a:hover {
@@ -219,18 +250,12 @@
 /* Responsive */
 @media (max-width: 992px) {
   .hero-content-grid {
-    grid-template-columns: 1fr;
-    gap: 3rem;
     margin-top: 80px;
   }
 
   .hero-image-wrapper {
-    max-width: 340px;
+    max-width: 280px;
     margin: 0 auto;
-  }
-
-  .hero-nodes-container {
-    min-height: 350px;
   }
 
   .hero-info-card {
@@ -249,7 +274,13 @@
     top: 10px;
   }
 
-  .hero-node__label {
-    font-size: 0.75rem;
+  /* Not enough room beside DESIGNER at this width - fall back to the
+     original stacked/centered layout instead of overlapping it. */
+  .hero-subtitle {
+    position: static;
+    transform: none;
+    text-align: center;
+    margin-top: 12px;
   }
+
 }

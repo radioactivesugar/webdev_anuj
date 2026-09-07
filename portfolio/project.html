@@ -5,11 +5,11 @@
     CASE STUDY PAGE: Intermission // ITC
     Built on the shared case-study design system: css/style.css +
     css/story.css + css/case-study.css (+ js/common.js, js/story.js,
-    js/case-study.js). See also bajaj-finance.html, and the
+    js/case-study.js). See also airtel.html, and the
     "alternate layout" family - undersea-cables.html, lightrock.html,
     revenue-growth.html - which share the same base system plus
     css/case-study-alt.css.
-    Series order: project.html -> undersea-cables.html -> bajaj-finance.html -> lightrock.html -> revenue-growth.html
+    Series order: project.html -> undersea-cables.html -> airtel.html -> lightrock.html -> revenue-growth.html
     Places to edit if you duplicate this file for a new case study:
       - <title>
       - #caseStudyHeroImage placeholder -> real cover image
@@ -39,6 +39,7 @@
   <header class="site-header">
     <a href="index.html" class="site-header__brand">Anuj<br>Debnath</a>
     <nav class="site-nav">
+      <a class="site-nav__link" href="index.html">home</a>
       <a class="site-nav__link" href="aboutme.html">about me</a>
       <a class="site-nav__link" href="index.html#works">works</a>
       <a class="site-nav__link" href="index.html#connect">connect</a>
@@ -48,7 +49,7 @@
   <!-- ============ PROJECT HERO ============ -->
   <section id="case-study-hero" class="section">
     <div class="case-study-hero">
-      <div class="case-study-hero__image" id="caseStudyHeroImage"></div>
+      <div class="case-study-hero__image" id="caseStudyHeroImage"><img src="images/project/00-cover.png" alt="Intermission // ITC cover" onerror="this.remove()"></div>
 
       <!-- Title overlaps the image's top-right corner (negative
            margin + nudge-down on the title itself); subtitle is a
@@ -81,7 +82,10 @@
         <p class="story-text__body">Episode 4 covers ITC, the Indian FMCG conglomerate — from its origins as Imperial Tobacco through its transformation into one of India's most diversified businesses.</p>
         <p class="story-text__body">This document walks through my process for conceiving, prototyping, and shipping the data visualisations for the episode's companion site.</p>
       </div>
-      <div class="story-image"></div>
+      <div class="story-image-caption-group">
+        <div class="story-image story-image--landscape"><img src="images/project/01.png" alt="Intermission // ITC — image 01" onerror="this.remove()"></div>
+        <p class="story-image-label">Landing page of Intermission</p>
+      </div>
     </div>
 
     <!-- Script -->
@@ -99,9 +103,21 @@
       <div aria-hidden="true"></div>
     </div>
     <div class="story-image-row">
-      <div class="story-image"></div>
-      <div class="story-image"></div>
-      <div class="story-image"></div>
+      <div class="doc-frame">
+        <div class="doc-frame__titlebar">
+          <svg class="doc-frame__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M5 2h9l5 5v15a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1Z" fill="#4285F4"/>
+            <path d="M14 2v5h5" fill="#a9c6fb"/>
+          </svg>
+          <span class="doc-frame__filename">Intermission — Episode 4 — ITC — Script</span>
+        </div>
+        <div class="doc-frame__page">
+          <p>BAT was unhappy with this drift. It also wanted to raise its stake in ITC, so it accused ITC's management of financial irregularities in 1995. The fight became a political flashpoint, framed in the press as a foreign takeover attempt of an Indian icon. Chugh resigned that December, 20 months before the intended end of his tenure.</p>
+          <p>Deveshwar took the top job. But unlike Haksar, he inherited a company in a precarious situation.</p>
+          <p class="doc-frame__note">V5.4 — <span class="doc-frame__highlight">Chart</span> — ITC's share price decline from roughly Rs 750 in FY93 to Rs 253 in FY95, with annotations showing the BAT dispute</p>
+        </div>
+      </div>
+      <div class="story-image"><img src="images/project/04.png" alt="Intermission // ITC — image 04" onerror="this.remove()"></div>
     </div>
 
     <!-- Explorations -->
@@ -124,13 +140,17 @@
 
     <div class="story-image-row">
       <div class="story-image-caption-group">
-        <div class="story-image"></div>
+        <div class="story-image"><img src="images/project/05.png" alt="Intermission // ITC — image 05" onerror="this.remove()"></div>
         <p class="story-image-label">Prompt</p>
       </div>
       <div class="story-image-caption-group">
-        <div class="story-image"></div>
+        <div class="story-image"><img src="images/project/06.png" alt="Intermission // ITC — image 06" onerror="this.remove()"></div>
         <p class="story-image-label">Result</p>
       </div>
+    </div>
+
+    <div class="story-text-block">
+      <p class="story-text__body">The prompt on the left is a condensed version of the actual brief handed to Gemini — the relevant script excerpt, the data points to feature, and a short note on tone and reference. The result on the right is the raw single-file HTML it generates: functional immediately, but built entirely on Gemini's own visual judgement rather than the site's design system — which is exactly the gap the next stage closes.</p>
     </div>
 
     <!-- Design System: heading sits above, left-aligned with the text
@@ -142,7 +162,7 @@
         <p class="story-text__lede">The site's visual language is owned by our visual team.</p>
         <p class="story-text__body">The team consists of a product designer and an art director, who maintain a consistent five-colour palette and a full design system covering typography, sizing, and spacing.</p>
       </div>
-      <div class="story-image story-image--rise story-image--parallax"></div>
+      <div class="story-image story-image--rise story-image--parallax"><img src="images/project/07.png" alt="Intermission // ITC — image 07" onerror="this.remove()"></div>
     </div>
 
     <div class="story-callout story-callout--warm">
@@ -154,15 +174,15 @@
           <p class="story-text__body">This stage also involves <span class="hl">breaking the single-file HTML prototypes</span> apart into their component styles, scripts, and sections within the main <span class="inline-code">index.html</span>. I tag each prototype with identifiers like <span class="inline-code">QW4K1-DataViz</span>, which makes it much easier to reference specific pieces when I'm working with Claude on revisions.</p>
           <p class="story-text__body">Together, the <span class="inline-code">prompt.md</span> system and Claude Code meaningfully cut down the time it takes to turn a single-HTML prototype into a production-ready piece that fits the site's context and brand.</p>
         </div>
-        <div class="story-image"></div>
+        <div class="story-image"><img src="images/project/08.png" alt="Intermission // ITC — image 08" onerror="this.remove()"></div>
       </div>
     </div>
 
     <!-- Q&A heading overlaps the bottom of the image row before it -->
     <div class="story-overlap">
       <div class="story-image-row">
-        <div class="story-image"></div>
-        <div class="story-image"></div>
+        <div class="story-image"><img src="images/project/09.png" alt="Intermission // ITC — image 09" onerror="this.remove()"></div>
+        <div class="story-image"><img src="images/project/10.png" alt="Intermission // ITC — image 10" onerror="this.remove()"></div>
       </div>
       <h2 class="section-title story-heading story-overlap__heading story-heading--qa">Q&amp;A</h2>
     </div>
@@ -177,8 +197,14 @@
         <p class="story-text__body">iPad is less predictable. Depending on the visualisation, either the web or mobile version can end up working better — there's no fixed rule. The biggest challenge on iPad is usually font sizing and alignment; when maximum heights are set correctly, the web version tends to hold up better, though that's not a hard-and-fast rule either.</p>
       </div>
       <div class="story-image-row story-image-row--flush">
-        <div class="story-image story-image--mobile"></div>
-        <div class="story-image story-image--ipad"></div>
+        <div class="story-image-caption-group">
+          <div class="story-image story-image--mobile"><img src="images/project/11.png" alt="Intermission // ITC — image 11" onerror="this.remove()"></div>
+          <p class="story-image-label">iPhone 12</p>
+        </div>
+        <div class="story-image-caption-group">
+          <div class="story-image story-image--ipad"><img src="images/project/12.png" alt="Intermission // ITC — image 12" onerror="this.remove()"></div>
+          <p class="story-image-label">iPad Mini</p>
+        </div>
       </div>
     </div>
 
@@ -189,7 +215,7 @@
          (not beside them) with extra breathing room. -->
     <div class="story-overlap">
       <h2 class="section-title story-heading story-overlap__heading story-heading--integration">INTEGRATION</h2>
-      <div class="story-image story-image--full story-image--parallax"></div>
+      <div class="story-image story-image--full story-image--parallax"><img src="images/project/13.gif" alt="Intermission // ITC — image 13" onerror="this.remove()"></div>
     </div>
 
     <div class="story-columns">
@@ -204,10 +230,8 @@
     </div>
 
     <div class="story-image-row">
-      <div class="story-image"></div>
-      <div class="story-image story-image--tall"></div>
-      <div class="story-image"></div>
-      <div class="story-image"></div>
+      <div class="story-image"><img src="images/project/14.png" alt="Intermission // ITC — image 14" onerror="this.remove()"></div>
+      <div class="story-image"><img src="images/project/15.png" alt="Intermission // ITC — image 15" onerror="this.remove()"></div>
     </div>
 
     <!-- Live QW4K prototypes from prototypes/ITC/, embedded via iframe -->
@@ -216,13 +240,13 @@
       <p class="story-text__lede">The visualisations as they actually shipped, live and interactive below.</p>
     </div>
     <div class="itc-prototypes-grid">
-      <div class="itc-prototype">
+      <div class="itc-prototype itc-prototype--shareholding">
         <iframe src="prototypes/ITC/shareholding.html" title="BAT's shareholding in ITC - interactive chart" loading="lazy"></iframe>
       </div>
-      <div class="itc-prototype">
+      <div class="itc-prototype itc-prototype--smoke75">
         <iframe src="prototypes/ITC/smoke75.html" title="Cigarette taxation vs. other markets - interactive chart" loading="lazy"></iframe>
       </div>
-      <div class="itc-prototype itc-prototype--wide">
+      <div class="itc-prototype itc-prototype--cigarette">
         <iframe src="prototypes/ITC/cigarette.html" title="Still a smokes company - revenue vs. profit, interactive chart" loading="lazy"></iframe>
       </div>
     </div>
@@ -234,7 +258,7 @@
       <a href="undersea-cables.html" class="case-study-pager-preview case-study-pager-preview--next">
         <div class="story-overlap">
           <span class="section-title case-study-pager__label story-overlap__heading next-header">NEXT</span>
-          <div class="story-image"></div>
+          <div class="story-image"><img src="images/undersea-cables/00-cover.png" alt="Undersea Cables cover" onerror="this.remove()"></div>
         </div>
         <p class="case-study-pager-preview__lede">Undersea Cables: Meta's new India cable, and the fragile network holding up the country's internet.</p>
         <div class="meta-list">
@@ -249,20 +273,18 @@
   <!-- ============ FOOTER ============ -->
   <section class="section contact-section">
     <div class="contact-details">
-      <a class="contact-details__line" href="tel:+910000000000">+91 00000 00000</a>
-      <a class="contact-details__line" href="mailto:hello@anujdebnath.com">hello@anujdebnath.com</a>
+      <a class="contact-details__line" href="tel:+919874608128">+91 98746 08128</a>
+      <a class="contact-details__line" href="mailto:anujdebnath246@gmail.com">anujdebnath246@gmail.com</a>
     </div>
 
     <div class="contact-social-row">
-      <a class="link-arrow" href="#" target="_blank" rel="noopener">Instagram &#8599;</a>
-      <a class="link-arrow" href="#" target="_blank" rel="noopener">Telegram &#8599;</a>
-      <a class="link-arrow" href="#" target="_blank" rel="noopener">Facebook &#8599;</a>
+      <a class="link-arrow" href="https://www.instagram.com/codegarden.space/" target="_blank" rel="noopener">Instagram &#8599;</a>
+      <a class="link-arrow" href="https://medium.com/@radioactivesugar" target="_blank" rel="noopener">Medium &#8599;</a>
     </div>
 
     <div class="footer-columns">
       <ul class="footer-nav">
         <li><a class="footer-nav__link" href="aboutme.html">About Me</a></li>
-        <li><a class="footer-nav__link" href="#">Services</a></li>
         <li><a class="footer-nav__link" href="index.html#works">Works</a></li>
       </ul>
 
@@ -274,9 +296,9 @@
     </div>
 
     <div class="footer-links-row">
-      <a class="footer-links-row__link" href="#" target="_blank" rel="noopener">[ Dribbble ]</a>
-      <a class="footer-links-row__link" href="#" target="_blank" rel="noopener">[ Behance ]</a>
-      <a class="footer-links-row__link" href="#" target="_blank" rel="noopener">[ LinkedIn ]</a>
+      <a class="footer-links-row__link" href="https://radioactive-sugar.itch.io/" target="_blank" rel="noopener">[ itch.io ]</a>
+      <a class="footer-links-row__link" href="https://www.behance.net/anujdebnat6978" target="_blank" rel="noopener">[ Behance ]</a>
+      <a class="footer-links-row__link" href="https://www.linkedin.com/in/anuj-debnath-150407163/" target="_blank" rel="noopener">[ LinkedIn ]</a>
     </div>
 
     <h2 class="footer-wordmark" id="footer-wordmark">ANUJ DEBNATH</h2>
@@ -286,6 +308,14 @@
     <span class="footer-bottom__location" id="footerClock">INDIA: (GMT+5:30) --:--</span>
     <span class="footer-bottom__credit">Design &amp; Development &mdash; Anuj Debnath</span>
     <span class="footer-bottom__copyright">2026 All Rights Reserved. Anuj Debnath. Any reproduction, distribution, or use of the materials without permission is prohibited.</span>
+  </div>
+
+  <!-- Custom "expand" cursor shown over the BACK/NEXT pager previews -->
+  <div class="custom-cursor" id="customCursor" aria-hidden="true">
+    <svg viewBox="0 0 24 24">
+      <line x1="7" y1="17" x2="17" y2="7"></line>
+      <polyline points="8 7 17 7 17 16"></polyline>
+    </svg>
   </div>
 
   <script src="js/common.js"></script>

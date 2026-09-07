@@ -2,16 +2,16 @@
    ITC PROTOTYPES GRID (project.html only)
    The 3 live QW4K charts from prototypes/ITC/ (shareholding,
    smoke75, cigarette), embedded via iframe at the end of the
-   story. Grid: the two simpler single-chart pieces sit side by
-   side; the revenue/profit split (which already has 2 sub-charts
-   of its own) gets the full width below so its columns have room
-   to breathe.
+   story - one full-width row per visualisation, each iframe's
+   height matched to that specific chart's own natural content
+   height (measured directly) so the frame hugs the viz with no
+   dead space below it and no internal scrollbar.
    ========================================================= */
 
 .itc-prototypes-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
   margin: 3rem 0 6rem;
 }
 
@@ -27,28 +27,28 @@
   display: block;
 }
 
-.itc-prototype:not(.itc-prototype--wide) iframe {
-  height: 760px;
+.itc-prototype--shareholding iframe {
+  height: 850px;
 }
 
-.itc-prototype--wide {
-  grid-column: 1 / -1;
+.itc-prototype--smoke75 iframe {
+  height: 800px;
 }
 
-.itc-prototype--wide iframe {
-  height: 950px;
+.itc-prototype--cigarette iframe {
+  height: 930px;
 }
 
 @media (max-width: 900px) {
-  .itc-prototypes-grid {
-    grid-template-columns: 1fr;
+  .itc-prototype--shareholding iframe {
+    height: 800px;
   }
 
-  .itc-prototype:not(.itc-prototype--wide) iframe {
-    height: 640px;
+  .itc-prototype--smoke75 iframe {
+    height: 690px;
   }
 
-  .itc-prototype--wide iframe {
-    height: 820px;
+  .itc-prototype--cigarette iframe {
+    height: 1390px;
   }
 }

@@ -34,106 +34,193 @@ const contactLetters = splitLetters(document.getElementById('contact-title'));
 // starting position so it rises up from below instead of dropping in.
 const footerWordmarkLetters = splitLetters(document.getElementById('footer-wordmark'));
 
-// Titles below the fold reveal once scrolled into view (observeTitle
-// comes from js/common.js), reusing the same stagger/ease as the
-// hero's on-load entrance for a consistent feel.
-observeTitle(workLetters);
-observeTitle(contactLetters);
-observeTitle(footerWordmarkLetters);
+// Every title reveals/retreats as it scrolls in and out of view
+// (observeTitle comes from js/common.js) - hero-title happens to
+// already be in view at load, so this still plays as an immediate
+// entrance there, but now also drops back up if scrolled fully past
+// and re-enters on the way back, same as the titles below the fold.
+observeTitle(heroLetters, { bidirectional: true });
+observeTitle(workLetters, { bidirectional: true });
+observeTitle(contactLetters, { bidirectional: true });
+observeTitle(footerWordmarkLetters, { bidirectional: true, hiddenY: '120%' });
+
+// Lines up the "A" that ends "BASED IN INDIA" with the right edge of
+// the "R" that ends "DESIGNER" - not the title/wrapper/section's own
+// edge, and not the subtitle's own start either. DESIGNER is centered
+// within the full-width .hero-title-wrapper (css `.section-title`'s
+// justify-content:center), so its rendered position moves with
+// viewport width/font-size and can't be reached with CSS alone;
+// #heroSubtitleLastLetter (wrapping just that final "A") gives a
+// measurable point on the subtitle's side the same way heroLetters'
+// last entry (from splitLetters - already applied to the whole title
+// for its own drop-in reveal) does on the title's. Re-measures from
+// wherever the subtitle currently sits, so it converges correctly on
+// repeated calls (e.g. on resize) regardless of the starting position.
+// Skipped below the 576px breakpoint, where css/hero.css switches the
+// subtitle to a static, centered layout instead (not enough room
+// beside DESIGNER there).
+function alignHeroSubtitleToTitle() {
+  if (window.innerWidth <= 576) return;
+  const wrapper = document.querySelector('.hero-title-wrapper');
+  const subtitle = document.querySelector('.hero-subtitle');
+  const subtitleLastLetter = document.getElementById('heroSubtitleLastLetter');
+  const titleLastLetter = heroLetters[heroLetters.length - 1];
+  if (!wrapper || !subtitle || !subtitleLastLetter || !titleLastLetter) return;
+
+  const wrapperRect = wrapper.getBoundingClientRect();
+  const currentSubtitleLeft = subtitle.getBoundingClientRect().left - wrapperRect.left;
+  const delta = titleLastLetter.getBoundingClientRect().right - subtitleLastLetter.getBoundingClientRect().left;
+  subtitle.style.left = `${currentSubtitleLeft + delta}px`;
+}
+
+alignHeroSubtitleToTitle();
+window.addEventListener('resize', alignHeroSubtitleToTitle);
+// Re-measure once the real webfonts (css/style.css @font-face, all
+// font-display: swap) have actually swapped in - the first call above
+// runs against fallback-font metrics, which render DESIGNER/BASED IN
+// INDIA at slightly different widths than the real fonts do.
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(alignHeroSubtitleToTitle);
+}
 
 /* ---------------------------------------------------------
    1. Hero section (ported from landing.html)
    --------------------------------------------------------- */
-const heroTl = gsap.timeline();
+const heroImageMaskEl = document.getElementById('heroImageMask');
+const heroImageReveal = { reveal: 100 };
 
-heroTl
-  .add(() => revealLetters(heroLetters))
-  .to('#heroImageMask', {
-    scaleY: 1,
-    duration: 1,
-    ease: 'power3.inOut'
-  }, '+=0.3');
+// Timed to land just after the hero title's own reveal (0.8s duration
+// + the 0.3s gap the two used to share on one timeline), now that the
+// title's animation is driven by observeTitle above instead.
+gsap.to(heroImageReveal, {
+  reveal: 0,
+  duration: 1,
+  ease: 'power3.inOut',
+  delay: 1.1,
+  onUpdate: () => { heroImageMaskEl.style.clipPath = `inset(0% 0% ${heroImageReveal.reveal}% 0%)`; }
+});
 
-const heroNodes = document.querySelectorAll('.hero-node');
+// Rewired from the old hero "skill node" dots (removed - the Archive
+// timeline itself, moved up into the hero, is the interactive content
+// now) to the timeline's own legend buttons. #archiveFilterNav's "All"
+// button has no matching entry below, so hovering it is a harmless
+// no-op via the `if (!data) return` guard.
+const heroNodes = document.querySelectorAll('#archiveFilterNav .archive-filter-btn');
 const heroInfoCard = document.getElementById('heroInfoCard');
+const heroCardIcon = document.getElementById('heroCardIcon');
 const heroCardDesc = document.getElementById('heroCardDesc');
 const heroCardLinks = document.getElementById('heroCardLinks');
 
-// Same 5 categories as the archive timeline below (and timeline.csv's
-// own Type column) - each node's dot turns that category's color on
-// hover, and its example projects are real timeline.csv entries.
+// Same 5 categories as the archive timeline (and timeline.csv's own
+// Type column) - keyed by the exact data-category value on each
+// legend button, so the button's own text doubles as the lookup key.
+// Dates below are pulled from each project's entry in timeline.csv (the
+// Archive timeline's own data source) so this list stays consistent with
+// it - see js/timeline-data.js / loadArchiveProjects() below.
 const heroNodeData = {
-  web: {
+  'Web Development': {
     color: archiveCategoryColors['Web Development'],
     desc: 'Crafting responsive, performance-driven web interfaces with modern CSS and JavaScript animation frameworks.',
     projects: [
-      { name: 'Bird Map', url: '#' },
-      { name: 'Moodstich', url: '#' }
+      { name: 'Bird Map', url: '#', date: 'Oct 2025' },
+      { name: 'Moodstich', url: '#', date: 'Jul 2025' }
     ]
   },
-  visual: {
+  'Visual Journalism': {
     color: archiveCategoryColors['Visual Journalism'],
     desc: 'Using the understanding of systems and data, I design holistic visualisations and infographics for various platforms.',
+    // Trimmed to the 2 most recent, matching every other node's list
+    // length - the full 5 made this card noticeably taller than the rest.
     projects: [
-      { name: 'Intermission // ITC', url: 'project.html' },
-      { name: 'Undersea Cables', url: 'undersea-cables.html' },
-      { name: 'Intermission // Bajaj Finance', url: 'bajaj-finance.html' },
-      { name: 'Investment Chart', url: 'lightrock.html' },
-      { name: 'Revenue Growth', url: 'revenue-growth.html' }
+      { name: 'Intermission // ITC', url: 'project.html', date: '17 Aug 2026' },
+      { name: 'Revenue Growth', url: 'revenue-growth.html', date: '6 Jul 2026' }
     ]
   },
-  game: {
+  'Game Design': {
     color: archiveCategoryColors['Game Design'],
     desc: 'Designing mechanics, rules, and visual logic for immersive web-based interactive games.',
     projects: [
-      { name: 'Crisis City', url: '#' },
-      { name: '1 Dash', url: '#' }
+      { name: 'Crisis City', url: '#', date: 'Apr 2024' },
+      { name: '1 Dash', url: '#', date: 'Aug 2023' }
     ]
   },
-  graphic: {
+  'Graphic Design': {
     color: archiveCategoryColors['Graphic Design'],
     desc: 'Brand identity systems, typography visual hierarchy, and print media design.',
     projects: [
-      { name: 'Packaging — Baarbara Coffee', url: '#' },
-      { name: 'Limitless Institute', url: '#' }
+      { name: 'Packaging — Baarbara Coffee', url: '#', date: 'Jun 2018' },
+      { name: 'Limitless Institute', url: '#', date: '16 Apr 2020' }
     ]
   },
-  creatives: {
+  Creatives: {
     color: archiveCategoryColors['Creatives'],
     desc: 'Personal, exploratory work across writing, illustration, and audio-reactive experiments - made purely out of curiosity.',
     projects: [
-      { name: 'Hades — A Gateway to Olympus', url: '#' },
-      { name: 'Fabled Ciphers', url: '#' }
+      { name: 'Hades — A Gateway to Olympus', url: '#', date: '19 Jan 2021' },
+      { name: 'Fabled Ciphers', url: '#', date: 'Oct 2018' }
     ]
   }
 };
 
+// Converts a '#rrggbb' category color to an rgba() string at the
+// given alpha - used to soften the hero info-card's glow (a solid
+// hex color at full strength read as too strong/saturated for a
+// subtle glow; the box-shadow's own blur alone wasn't enough to tone
+// it down).
+function hexToRgba(hex, alpha) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+// One hand-drawn line icon per category - same minimal stroke style
+// (and, for graphic/game, the literal same icons) as aboutme.html's
+// .skill-tag icons, so the two pages share one visual language for
+// these categories rather than each inventing its own. Set as the
+// corner icon's content (inherits data.color via currentColor,
+// applied inline below) instead of a project photo - a photo can't
+// represent a whole category, and cropping one down to a small swatch
+// read as arbitrary.
+const heroNodeIcons = {
+  'Web Development': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 6 3 12l5 6"/><path d="M16 6l5 6-5 6"/></svg>',
+  'Visual Journalism': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><line x1="4" y1="20" x2="4" y2="12"/><line x1="12" y1="20" x2="12" y2="6"/><line x1="20" y1="20" x2="20" y2="15"/></svg>',
+  'Game Design': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="8" width="18" height="9" rx="4"/><line x1="7.5" y1="10.5" x2="7.5" y2="14.5"/><line x1="5.5" y1="12.5" x2="9.5" y2="12.5"/><circle cx="17" cy="11.5" r="0.8" fill="currentColor" stroke="none"/><circle cx="15" cy="13.5" r="0.8" fill="currentColor" stroke="none"/></svg>',
+  'Graphic Design': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="9" cy="9" r="6"/><rect x="10" y="10" width="10" height="10" rx="1"/></svg>',
+  Creatives: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M12 2c0 5-5 10-10 10 5 0 10 5 10 10 0-5 5-10 10-10-5 0-10-5-10-10Z"/></svg>'
+};
+
 let activeHeroNode = null;
 
-// The card follows the cursor while a node is hovered (updated on
-// every mousemove below) and disappears the instant the cursor
-// leaves that node - mouseleave (unlike mouseout) doesn't re-fire for
-// the node's own child elements, so hovering the dot/label inside it
-// doesn't cause a flicker.
+// The card follows the cursor while a legend button is hovered
+// (updated on every mousemove below) and disappears the instant the
+// cursor leaves it - mouseleave (unlike mouseout) doesn't re-fire for
+// the button's own child elements, so hovering the dot/label inside it
+// doesn't cause a flicker. The dot's own permanent category color
+// (set inline in the HTML) is left alone here - unlike the old hero
+// nodes, these dots already show their color at rest.
 heroNodes.forEach(node => {
   node.addEventListener('mouseenter', () => {
-    const key = node.getAttribute('data-node');
+    const key = node.getAttribute('data-category');
     const data = heroNodeData[key];
     if (!data) return;
 
     heroCardDesc.textContent = data.desc;
     heroCardLinks.innerHTML = data.projects
-      .map(p => `<li><a href="${p.url}">${p.name}</a></li>`)
+      .map(p => `<li><a href="${p.url}">${p.name}</a><span class="hero-info-card__date">${p.date}</span></li>`)
       .join('');
+    heroCardIcon.innerHTML = heroNodeIcons[key] || '';
+    heroCardIcon.style.color = data.color;
+    // Tints the card's own glow (css/hero.css's --glow) to match -
+    // softened with alpha rather than the solid category color.
+    heroInfoCard.style.setProperty('--glow', hexToRgba(data.color, 0.35));
 
-    node.querySelector('.hero-node__dot').style.backgroundColor = data.color;
     heroInfoCard.classList.add('is-active');
     activeHeroNode = node;
   });
 
   node.addEventListener('mouseleave', () => {
     heroInfoCard.classList.remove('is-active');
-    node.querySelector('.hero-node__dot').style.backgroundColor = '';
     activeHeroNode = null;
   });
 });
@@ -142,41 +229,79 @@ document.getElementById('about').addEventListener('mousemove', (e) => {
   if (!activeHeroNode || window.innerWidth <= 992) return;
 
   const sectionRect = document.getElementById('about').getBoundingClientRect();
+  // Measured live (not the CSS width alone) since the list's project
+  // count varies per node, so the card's real height varies too.
+  const cardWidth = heroInfoCard.offsetWidth || 360;
+  const cardHeight = heroInfoCard.offsetHeight || 200;
+
   let leftPos = e.clientX - sectionRect.left + 24;
   let topPos = e.clientY - sectionRect.top - 20;
 
-  if (leftPos + 360 > sectionRect.width) {
-    leftPos = e.clientX - sectionRect.left - 384;
+  // Flip to the other side of the cursor first if the default spot
+  // would run past that edge of the section...
+  if (leftPos + cardWidth > sectionRect.width) {
+    leftPos = e.clientX - sectionRect.left - cardWidth - 24;
   }
+  if (topPos + cardHeight > sectionRect.height) {
+    topPos = e.clientY - sectionRect.top - cardHeight + 20;
+  }
+
+  // ...then clamp as a hard fallback, so it's never partly off-frame
+  // even for a node right in a corner (the flip alone can undershoot).
+  leftPos = Math.max(10, Math.min(leftPos, sectionRect.width - cardWidth - 10));
+  topPos = Math.max(10, Math.min(topPos, sectionRect.height - cardHeight - 10));
 
   heroInfoCard.style.top = `${topPos}px`;
   heroInfoCard.style.left = `${leftPos}px`;
 });
 
 /* ---------------------------------------------------------
-   2a. Featured work grid - scroll reveal
-   Reuses the hero's vertical mask-reveal logic (scaleY 0 -> 1)
+   2a. Featured grid - scroll reveal
+   Plain fade+rise (not the clip-path image mask other reveals use) -
+   these cards are text-only now, no cover image baked into the cell
+   to mask-reveal.
    --------------------------------------------------------- */
-const workCards = document.querySelectorAll('.work-card');
+const featuredCards = document.querySelectorAll('.featured-card');
 
-gsap.set(workCards, { scaleY: 0 });
+revealOnScroll(
+  featuredCards,
+  { opacity: 0, y: 20 },
+  { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }
+);
 
-const workGridObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      gsap.to(workCards, {
-        scaleY: 1,
-        duration: 0.9,
-        ease: 'power3.inOut',
-        stagger: 0.08
-      });
-      workGridObserver.unobserve(entry.target);
-    }
+/* ---------------------------------------------------------
+   2a-i. Custom cursor over the Featured grid
+   Arrow badge by default anywhere over #featuredGrid; swaps to a
+   small dot + that card's own cover image (data-cover) while over a
+   specific .featured-card - see .featured-cursor in css/work.css.
+   --------------------------------------------------------- */
+const featuredGrid = document.getElementById('featuredGrid');
+const featuredCursor = document.getElementById('featuredCursor');
+const featuredCursorImg = document.getElementById('featuredCursorImg');
+
+if (featuredGrid && featuredCursor) {
+  featuredGrid.addEventListener('mouseenter', () => featuredCursor.classList.add('is-visible'));
+  featuredGrid.addEventListener('mouseleave', () => featuredCursor.classList.remove('is-visible', 'is-card'));
+  // The preview image is a fairly large 550x400 box offset down-right
+  // from the cursor (css/work.css) - flip it to the other side on
+  // whichever axis would otherwise run it past the viewport edge, so
+  // it's never partly cut off near the right or bottom of the screen.
+  featuredGrid.addEventListener('mousemove', (e) => {
+    featuredCursor.style.left = `${e.clientX}px`;
+    featuredCursor.style.top = `${e.clientY}px`;
+    featuredCursor.classList.toggle('featured-cursor--flip-x', e.clientX + 30 + 550 > window.innerWidth);
+    featuredCursor.classList.toggle('featured-cursor--flip-y', e.clientY + 30 + 400 > window.innerHeight);
   });
-}, { threshold: 0.2 });
 
-const workGridEl = document.querySelector('.work-grid');
-if (workGridEl) workGridObserver.observe(workGridEl);
+  featuredCards.forEach(card => {
+    card.addEventListener('mouseenter', () => {
+      featuredCursor.classList.add('is-card');
+      featuredCursorImg.style.opacity = 1;
+      featuredCursorImg.src = card.dataset.cover || '';
+    });
+    card.addEventListener('mouseleave', () => featuredCursor.classList.remove('is-card'));
+  });
+}
 
 /* ---------------------------------------------------------
    2b. Archive timeline + gallery (ported from timeline.html)
@@ -193,22 +318,10 @@ const ARCHIVE_CATEGORY_FALLBACK = 'Creatives';
 
 // Random (but stable per-project, via the seed) placeholder photo -
 // used until a real image is dropped into images/archive/ for that
-// project (see loadArchiveProjects()'s "image" field + the README in
-// that folder for the exact filename each project expects).
+// project (see the numbering assigned in initArchive() below + the
+// README in that folder for the exact filename each project expects).
 function getArchiveFallbackImage(id) {
   return `https://picsum.photos/seed/${encodeURIComponent(id)}/400/300`;
-}
-
-// Slugified from the project name, e.g. "Hades — A Gateway to Olympus"
-// -> images/archive/hades-a-gateway-to-olympus.jpg - drop a matching
-// file in and it's picked up automatically; anything missing falls
-// back to the generated placeholder above.
-function slugifyArchiveName(name) {
-  return name
-    .toLowerCase()
-    .normalize('NFKD').replace(/[̀-ͯ]/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
 }
 
 /* Minimal CSV parser: handles quoted fields, commas/newlines inside
@@ -363,7 +476,6 @@ async function loadArchiveProjects() {
       impact: parseFloat(col(row, 'impact(0-9)')) || 1,
       stack: col(row, 'Tools Used'),
       link: col(row, 'Link'),
-      image: `images/archive/${slugifyArchiveName(name)}.jpg`,
       color: archiveCategoryColors[category]
     });
   });
@@ -421,7 +533,11 @@ function updateArchiveTooltipContent(proj) {
     img.addEventListener('error', () => {
       img.src = getArchiveFallbackImage(proj.id);
     }, { once: true });
-    img.src = proj.image;
+    // Numbered by chronological position (idx, after the timestamp
+    // sort above) rather than derived from the project name - a
+    // fixed slot per position, same convention as images/project/ etc.
+    // See images/archive/README.txt for the exact name -> number list.
+    img.src = `images/archive/${String(idx + 1).padStart(2, '0')}.png`;
     imageBox.appendChild(img);
 
     const info = document.createElement('div');
@@ -476,7 +592,7 @@ function updateArchiveTooltipContent(proj) {
         color: '#1d1d1f',
         formatter: '{yyyy}',
         verticalAlign: 'middle',
-        margin: -16,
+        margin: -22,
         fontSize: 11,
         fontWeight: 'bold'
       },
@@ -521,6 +637,38 @@ function updateArchiveTooltipContent(proj) {
   // long enough for its share icon to actually be reachable/clickable.
   let archiveActiveProjId = null;
   let archiveHoveringBubble = false;
+  let archiveLastMouseX = 0;
+  let archiveLastMouseY = 0;
+
+  // Positions the tooltip near the cursor (both wrapper-relative) so
+  // it still reads as attached to the mouse and moves with it -
+  // flipping horizontally to the other side of the cursor if that
+  // would push it past the wrapper's edge, then clamping as a hard
+  // fallback. Vertically it always sits ABOVE the cursor rather than
+  // below (or below-by-default-flipping-to-above): every bubble sits
+  // on the same horizontal timeline, vertically centered in this
+  // wrapper, so the cursor hovering one is already right at that
+  // center line - placing the tooltip below it (even by a little)
+  // routinely put it right back on top of the neighboring bubbles.
+  // Anchoring above means its own height only ever pushes it further
+  // up (spilling above the chart entirely for a tall tooltip, same as
+  // before), never back down into the timeline.
+  function positionArchiveTooltip(mouseX, mouseY) {
+    const bounds = archiveChartWrapper.getBoundingClientRect();
+    const tooltipWidth = archiveTooltip.offsetWidth || 230;
+    const tooltipHeight = archiveTooltip.offsetHeight || 160;
+
+    let targetLeft = mouseX - 115;
+
+    if (targetLeft + tooltipWidth + 10 > bounds.width) {
+      targetLeft = mouseX - tooltipWidth + 115;
+    }
+
+    targetLeft = Math.max(10, Math.min(targetLeft, bounds.width - tooltipWidth - 10));
+
+    archiveTooltip.style.left = `${targetLeft}px`;
+    archiveTooltip.style.top = `${mouseY - tooltipHeight - 18}px`;
+  }
 
   // Only reposition while no tooltip is currently pinned (i.e. pure
   // scanning, nothing shown yet) - once archiveActiveProjId is set
@@ -533,20 +681,25 @@ function updateArchiveTooltipContent(proj) {
   // you move toward it, since its position is always relative to
   // wherever this handler last put the tooltip.
   archiveChartWrapper.addEventListener('mousemove', (e) => {
-    if (archiveActiveProjId !== null) return;
-
     const bounds = archiveChartWrapper.getBoundingClientRect();
-    const mouseX = e.clientX - bounds.left;
-    const mouseY = e.clientY - bounds.top;
+    archiveLastMouseX = e.clientX - bounds.left;
+    archiveLastMouseY = e.clientY - bounds.top;
 
-    let targetLeft = mouseX - 115;
-    let targetTop = mouseY + 18;
+    if (archiveActiveProjId !== null) return;
+    positionArchiveTooltip(archiveLastMouseX, archiveLastMouseY);
+  });
 
-    if (targetLeft < 10) targetLeft = 10;
-    if (targetLeft + 235 > bounds.width) targetLeft = bounds.width - 245;
-
-    archiveTooltip.style.left = `${targetLeft}px`;
-    archiveTooltip.style.top = `${targetTop}px`;
+  // Hides the tooltip immediately, with no grace period, the instant
+  // the cursor leaves the chart wrapper entirely - the grace-period
+  // hide below exists only to bridge the small gap between a bubble
+  // and the tooltip's own share icon; once the cursor's left the
+  // whole wrapper there's no such icon left to reach.
+  archiveChartWrapper.addEventListener('mouseleave', () => {
+    cancelArchiveTooltipHide();
+    archiveTooltip.classList.remove('is-active');
+    archiveActiveProjId = null;
+    archiveHoveringBubble = false;
+    resetArchiveGallery();
   });
 
   function updateArchiveFrameVisibility() {
@@ -649,6 +802,9 @@ function updateArchiveTooltipContent(proj) {
     cancelArchiveTooltipHide();
     const proj = params.data.projectData;
     updateArchiveTooltipContent(proj);
+    // Re-measure now that the real content is in - this project's card
+    // may be taller/wider than whatever was showing during the scan.
+    positionArchiveTooltip(archiveLastMouseX, archiveLastMouseY);
     focusArchiveCard(proj.id);
     archiveActiveProjId = proj.id;
     archiveHoveringBubble = true;

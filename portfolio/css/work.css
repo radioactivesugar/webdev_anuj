@@ -4,130 +4,355 @@
    (ported from timeline.html, prefixed "archive-").
    ========================================================= */
 
+/* padding-bottom override cuts down the base .section's 6rem - on top
+   of .contact-section's own 4rem top padding, that read as a much
+   bigger gap before CONTACT than anything else on the page. */
 .work-section {
   padding-top: 2rem;
+  padding-bottom: 1.5rem;
 }
 
-/* ---------- Featured work grid ---------- */
-.work-grid {
+/* "Featured" (.section-label, css/style.css) matches "Archive"'s own
+   heading (.archive-title) in font-size only - scoped here rather
+   than changing the shared .section-label rule itself, since that
+   class is documented as reusable for other section labels too. */
+.work-section .section-label {
+  font-size: 1.25rem;
+}
+
+/* ---------- Featured grid ----------
+   Text-only editorial grid (featured.png reference) - no cover images
+   baked into the cells; the cover only ever appears as a cursor-
+   following preview on hover (see #featuredCursor below). Full-bleed:
+   breaks out of .section's centered max-width via the classic
+   negative-margin trick (100vw + left/right:50% + matching negative
+   margins) so the grid lines/background reach the true viewport
+   edges. Safe here because body already has overflow-x:hidden
+   (css/style.css) - 100vw can include the scrollbar's own width in
+   some browsers, which would otherwise force a horizontal scrollbar. */
+/* 4 columns x 3 explicit row heights (big/medium/small tier, tallest
+   to shortest) - --big spans 2x2 into the first two rows, so its own
+   height is those two row tracks combined. Everything else relies on
+   the grid's default auto-flow to land in the right spot, given the
+   DOM order below (1 big, then 4 medium, then 4 small): the 4 medium
+   cards fill the remaining single cells of rows 1-2 around --big,
+   then the 4 small cards flow into row 3. */
+.featured-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(2, minmax(220px, 1fr));
-  gap: 4px;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: 230px 230px 150px;
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  border-top: 1px solid var(--card-border);
+  border-left: 1px solid var(--card-border);
 }
 
-.work-card {
-  background-color: var(--card-bg-alt);
-  padding: 1.75rem;
+.featured-card--big {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+.featured-card {
+  position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  position: relative;
+  gap: 0.75rem;
+  /* No explicit height - stretches to fill whatever the grid gives it
+     (its own row-track height, or 2 combined for --big), same as any
+     grid item's default align-items:stretch. overflow:hidden guards
+     the small tier's tight 150px row against a longer title/desc
+     combination spilling into the row below. */
   overflow: hidden;
-  transform-origin: top;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  /* .work-card--primary is an <a> (links to project.html); the rest
-     are still <article> - color/text-decoration reset is harmless on
-     those since neither property does anything on a non-link element. */
-  color: inherit;
+  padding: 2rem var(--section-pad-x);
+  background-color: var(--bg-color-alt);
+  color: var(--text-color);
   text-decoration: none;
+  border-right: 1px solid var(--card-border);
+  border-bottom: 1px solid var(--card-border);
+  /* Native pointer hidden in favor of #featuredCursor the whole time
+     it's over the grid (js/main.js) - toggled per-card there too. */
+  cursor: none;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.work-card:hover {
-  background-color: #cfcfcf;
+/* Small tier gets tighter padding and a smaller title - its 150px row
+   (vs. medium/big's 230/460px) has much less room to begin with. */
+.featured-card--small {
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
 }
 
-.work-card--primary {
-  grid-column: 1;
-  grid-row: 1 / span 2;
+.featured-card--small .featured-card__title {
+  font-size: 1.05rem;
 }
 
-.work-card--tall {
-  grid-column: 2;
-  grid-row: 1;
+/* Big tier's title/description scale up too, not just the box itself -
+   it should read as more important, not just occupy more space. */
+.featured-card--big .featured-card__title {
+  font-size: clamp(1.8rem, 2.6vw, 2.6rem);
 }
 
-.work-card--tall-alt {
-  grid-column: 3;
-  grid-row: 1;
+.featured-card--big .featured-card__desc {
+  font-size: 0.95rem;
+  max-width: 32em;
 }
 
-.work-card--short {
-  grid-column: 2;
-  grid-row: 2;
+.featured-card:hover,
+.featured-card:focus-visible {
+  background-color: #161616;
+  color: #fff;
 }
 
-.work-card--short-alt {
-  grid-column: 3;
-  grid-row: 2;
-}
-
-.work-card__title {
-  font-size: 1.15rem;
-  position: relative;
-  z-index: 2;
-}
-
-.work-card__meta {
+.featured-card__label {
   font-family: var(--font-caption);
   font-size: 0.7rem;
-  line-height: 1.6;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  transition: color 0.3s ease;
+}
+
+.featured-card:hover .featured-card__label {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Deliberate one-off: the only serif on the site (prompt.md's type
+   system is Anta/DM Sans/Fragment Mono only) - a system serif rather
+   than a new webfont, matching featured.png's own headline treatment
+   for just this component. */
+.featured-card__title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  font-size: clamp(1.3rem, 1.7vw, 1.6rem);
+  line-height: 1.25;
+}
+
+.featured-card__desc {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  line-height: 1.5;
   color: var(--text-muted);
-  position: relative;
-  z-index: 2;
+  /* Pushed to the bottom of the card - a short title leaves genuine
+     empty space above the description instead of the two huddling
+     together, matching featured.png's generous negative space. */
+  margin-top: auto;
+  transition: color 0.3s ease;
 }
 
-/* Each line (date / org / stack) is a <span> - block so it actually
-   sits on its own line instead of all running into one sentence, and
-   so margin-top between them has any effect at all (vertical margins
-   do nothing on inline elements). */
-.work-card__meta > * {
-  display: block;
+.featured-card:hover .featured-card__desc {
+  color: rgba(255, 255, 255, 0.75);
 }
 
-.work-card__meta > * + * {
-  margin-top: 0.5rem;
+/* Rotating "FEATURED" badge, dropped into whichever card has the most
+   spare room (featured.png does the same in its own sparsest cell) -
+   circular text via SVG textPath, not an image, so it stays crisp at
+   any size and needs no asset. */
+.featured-card__spinner {
+  position: absolute;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  width: 64px;
+  height: 64px;
+  color: var(--text-faint);
+  animation: featuredSpin 14s linear infinite;
 }
 
-/* The primary card's bio is always visible; the rest reveal theirs
-   on hover, same idea as the archive gallery's card-info reveal. */
-.work-card:not(.work-card--primary) .work-card__meta {
+/* Bigger to match its new home (only ever used on --big currently) -
+   64px read as lost in a 460px-tall card. */
+.featured-card--big .featured-card__spinner {
+  right: 2rem;
+  bottom: 2rem;
+  width: 110px;
+  height: 110px;
+}
+
+.featured-card:hover .featured-card__spinner {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.featured-card__spinner svg {
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes featuredSpin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Custom cursor for the grid - an arrow badge by default (anywhere
+   over #featuredGrid), swapping to a small dot + the hovered card's
+   own cover image (js/main.js sets #featuredCursorImg's src from that
+   card's data-cover). Fixed + tracked via mousemove in js/main.js. */
+.featured-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
   opacity: 0;
-  transform: translateY(6px);
-  transition: opacity 0.35s ease, transform 0.35s ease;
+  transition: opacity 0.2s ease;
 }
 
-.work-card:not(.work-card--primary):hover .work-card__meta {
+.featured-cursor.is-visible {
   opacity: 1;
-  transform: translateY(0);
 }
 
-/* ---------- Archive timeline (from timeline.html) ---------- */
+.featured-cursor__arrow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 68px;
+  height: 68px;
+  margin: -34px 0 0 -34px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.featured-cursor.is-card .featured-cursor__arrow {
+  opacity: 0;
+  transform: scale(0.4);
+}
+
+.featured-cursor__arrow svg {
+  width: 22px;
+  height: 22px;
+  stroke: var(--line-color);
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.featured-cursor__dot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  border-radius: 50%;
+  background-color: #000;
+  opacity: 0;
+  transform: scale(0.4);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.featured-cursor.is-card .featured-cursor__dot {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* 2.5x the original 220x160 preview size - read as too small next to
+   the cards it's previewing. */
+.featured-cursor__preview {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  width: 550px;
+  height: 400px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transform: scale(0.92);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.featured-cursor.is-card .featured-cursor__preview {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Flips the preview to the other side of the cursor on whichever axis
+   js/main.js determined would otherwise run it past the viewport
+   edge, at this size (550x400 - see .featured-cursor__preview). */
+.featured-cursor--flip-x .featured-cursor__preview {
+  left: auto;
+  right: 30px;
+}
+
+.featured-cursor--flip-y .featured-cursor__preview {
+  top: auto;
+  bottom: 30px;
+}
+
+.featured-cursor__preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.2s ease;
+}
+
+@media (hover: none) {
+  /* No real pointer to track (touch) - keep the normal tap behavior,
+     custom cursor and cover-image preview are a hover-only flourish. */
+  .featured-cursor {
+    display: none;
+  }
+
+  .featured-card {
+    cursor: pointer;
+  }
+}
+
+/* ---------- Archive timeline (from timeline.html; now embedded in
+   the hero section, css/hero.css, instead of sitting below the
+   Featured work grid - no more "Archive" heading, so no top margin
+   needed to clear one; just enough gap below the hero image row. */
 .archive-block {
-  margin-top: 5rem;
+  margin-top: 3rem;
 }
 
-.archive-title {
-  font-size: 1.75rem;
-  margin-bottom: 1.5rem;
-}
-
-/* Full-width grey panel behind the legend, the timeline, and the
-   picture gallery - one continuous background rather than the chart
-   alone having it, spanning the same width as everything else in
-   this section. */
+/* No glass card behind the legend/chart/gallery - just plain layout
+   spacing now (the page-wide ambient gradient in css/style.css
+   handles colour for the whole site, this section doesn't need its
+   own background on top of that). Zero horizontal padding so the
+   legend/hint/chart/gallery below all align flush with the "Archive"
+   heading above, instead of sitting inset from it. */
 .archive-panel {
   width: 100%;
-  background-color: var(--section-header-bg);
-  border-radius: 4px;
-  padding: 2rem 2rem 2.5rem;
+  padding: 3rem 0 1rem;
 }
 
+/* Small caption above the legend, explaining it's clickable. */
+/* Center-aligned - sits between the chart and the gallery now
+   (moved there, and off the left edge, when the timeline relocated
+   into the hero - css/hero.css / index.html), reading as a caption
+   for both rather than leaning toward the chart above it. */
+.archive-hint {
+  text-align: center;
+  font-family: var(--font-caption);
+  font-size: 0.8rem;
+  color: var(--text-faint);
+  margin: 2rem 0 1.25rem;
+}
+
+/* Bubbles always sit at data-value y=0 (js/main.js), dead center of
+   the yAxis's symmetric -10..10 range, regardless of this height - so
+   a tall wrapper just means more unused space above and below them,
+   including right below where the gallery starts. Shorter wrapper,
+   same centering, less dead space before the gallery. */
 .archive-chart-wrapper {
   position: relative;
   width: 100%;
-  height: 260px;
+  height: 190px;
 }
 
 .archive-chart {
@@ -135,14 +360,22 @@
   height: 100%;
 }
 
-/* Floating contextual tooltip */
+/* Floating contextual tooltip - same glass treatment as .archive-panel
+   behind it (translucent white + blur/saturate), just scaled down for
+   a small floating card instead of a full-width panel. */
 .archive-tooltip {
   position: absolute;
   width: 230px;
-  background: #e8e8e8;
-  border: 1px solid var(--line-color);
+  background-color: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  border-radius: 14px;
   padding: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
   pointer-events: none;
   opacity: 0;
   z-index: 1000;
@@ -272,6 +505,7 @@
   position: relative;
   width: 100%;
   min-height: 380px;
+  margin-top: 3rem;
   overflow: hidden;
   display: flex;
 }
@@ -361,33 +595,33 @@
 
 /* Responsive */
 @media (max-width: 992px) {
-  .work-grid {
+  /* Fixed row tracks (230/230/150px) assumed a 4-column layout with
+     --big spanning 2x2 - at 2 columns that math no longer holds, so
+     rows go back to auto-sized and each tier gets its own min-height
+     instead. */
+  .featured-grid {
     grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: auto;
+    grid-template-rows: none;
   }
 
-  .work-card--primary {
-    grid-column: 1 / span 2;
-    grid-row: 1;
-    min-height: 280px;
-  }
-
-  .work-card--tall,
-  .work-card--tall-alt,
-  .work-card--short,
-  .work-card--short-alt {
-    grid-column: auto;
+  .featured-card--big {
+    grid-column: span 2;
     grid-row: auto;
+    min-height: 320px;
+  }
+
+  .featured-card--medium,
+  .featured-card--small {
     min-height: 200px;
   }
 }
 
 @media (max-width: 576px) {
-  .work-grid {
+  .featured-grid {
     grid-template-columns: 1fr;
   }
 
-  .work-card--primary {
+  .featured-card--big {
     grid-column: 1;
   }
 

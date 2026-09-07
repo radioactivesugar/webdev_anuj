@@ -83,15 +83,43 @@
   margin-top: 1.25rem;
 }
 
-/* Image placeholder box. Mask-revealed via scaleY (js/story.js),
-   same technique as the hero image on index.html. */
+/* Plain bullet list, e.g. the DATA section's "what's visible at each
+   layer" breakdown - list items reuse .story-text__body for type,
+   just with a marker added. */
+.story-bullet-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.story-bullet-list li {
+  position: relative;
+  padding-left: 1.1em;
+}
+
+.story-bullet-list li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--text-color);
+}
+
+.story-bullet-list li + li {
+  margin-top: 1.25rem;
+}
+
+/* Image placeholder box. Mask-revealed via clip-path (js/story.js) -
+   a scaleY transform would stretch the img inside it too, same
+   reason as the hero image mask in css/hero.css. */
 .story-image {
   position: relative;
+  display: block;
   width: 100%;
   aspect-ratio: 4 / 3;
   background-color: var(--card-bg-strong);
   overflow: hidden;
-  transform-origin: top;
+  border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
 }
 
 .story-image--full {
@@ -103,10 +131,20 @@
   aspect-ratio: 3 / 4;
 }
 
+/* Full-width landscape screenshot (e.g. a site landing page) - ratio
+   matches the source image so object-fit: cover doesn't crop it down
+   to the default 4:3 box. */
+.story-image--landscape {
+  aspect-ratio: 1414 / 638;
+}
+
 .story-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  /* Native pointer is hidden here - the circular .custom-cursor
+     (js/common.js initCursorFollower) stands in for it while hovering. */
+  cursor: none;
 }
 
 /* Two or three images side by side */
@@ -289,13 +327,90 @@
 }
 
 /* Device-proportioned placeholders, e.g. the Q&A section's two
-   screenshots (one phone, one tablet). */
+   screenshots (one phone, one tablet) - ratios match the actual
+   source screenshots (iPhone 12: 299x640, iPad Mini: 574x657) so
+   object-fit: cover doesn't crop off part of the UI. */
 .story-image--mobile {
-  aspect-ratio: 9 / 19;
+  aspect-ratio: 299 / 640;
 }
 
 .story-image--ipad {
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 574 / 657;
+}
+
+/* Minimal document-app frame (Google Docs, Word, ...) - stands in for
+   a script/data excerpt until the real copy is dropped into
+   .doc-frame__page (swap .doc-frame__icon's SVG per instance for the
+   app it's meant to look like). Same box shape as .story-image (4:3)
+   so it sits evenly with an image sibling in a .story-image-row. */
+.doc-frame {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  aspect-ratio: 4 / 3;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+.doc-frame__titlebar {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-shrink: 0;
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  background: #fafafa;
+}
+
+.doc-frame__icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.doc-frame__filename {
+  font-family: var(--font-caption);
+  font-size: 0.75rem;
+  color: #444;
+}
+
+.doc-frame__page {
+  flex: 1;
+  padding: 1.25rem 1.5rem;
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  line-height: 1.55;
+}
+
+.doc-frame__page p + p {
+  margin-top: 0.85em;
+}
+
+.doc-frame__note {
+  color: #c0392b;
+}
+
+.doc-frame__highlight {
+  background: #fde68a;
+  border-radius: 2px;
+  padding: 0 0.2em;
+}
+
+/* Raw code/data excerpt (e.g. a .js source file) inside .doc-frame__page,
+   as opposed to prose - monospace, and smaller since a data dump reads
+   dense at the same size as a script paragraph. */
+.doc-frame__code {
+  margin: 0;
+  font-family: var(--font-caption);
+  font-size: 0.62rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--text-muted);
 }
 
 /* Small inline icon, e.g. the Gemini/Claude marks in a callout -
@@ -375,6 +490,99 @@
 
 .story-callout--dark .inline-code {
   background: rgba(255, 255, 255, 0.12);
+}
+
+/* Click-to-enlarge overlay for .story-image (see initImageLightbox in
+   js/common.js) - a single shared instance appended to <body>, reused
+   for whichever image was last clicked. Closing is entirely cursor-
+   driven (click anywhere - image or backdrop - to close, see
+   .custom-cursor below), so there's no separate close button. */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5vh 5vw;
+  background: rgba(10, 10, 10, 0.88);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  cursor: none;
+}
+
+.lightbox.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.lightbox__img {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 8px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+  cursor: none;
+}
+
+/* Solid white cursor badge shown over a .story-image (see
+   initImageLightbox in js/common.js) - a "+" while hovering a
+   thumbnail, morphing to "-" while the enlarged overlay is open,
+   since a click anywhere in it closes the zoom. */
+.custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  z-index: 1001;
+}
+
+.custom-cursor.is-active {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.custom-cursor__bar {
+  position: absolute;
+  background: #111;
+  border-radius: 1px;
+}
+
+.custom-cursor__bar--h {
+  width: 16px;
+  height: 2px;
+}
+
+.custom-cursor__bar--v {
+  width: 2px;
+  height: 16px;
+  transition: transform 0.2s ease;
+}
+
+/* Plus morphs to minus by collapsing the vertical bar */
+.custom-cursor.is-zoomed .custom-cursor__bar--v {
+  transform: scaleY(0);
+}
+
+@media (hover: none) {
+  .custom-cursor {
+    display: none;
+  }
+
+  .story-image img {
+    cursor: default;
+  }
 }
 
 /* Responsive */

@@ -1,7 +1,10 @@
 /* =========================================================
    ABOUT PAGE  (aboutme.html)
-   Only the intro hero is page-specific; everything below it reuses
-   the shared story blocks in css/story.css.
+   The intro hero + everything below it (pull quote, disciplines,
+   process, tools, closing) are page-specific; the shared story
+   blocks in css/story.css handle the rest (headings, story-text,
+   the one showcase image). See prompt.md for the design system this
+   is built from.
    ========================================================= */
 
 .about-intro {
@@ -10,7 +13,7 @@
 
 .about-intro__grid {
   display: grid;
-  grid-template-columns: minmax(240px, 24%) 1fr minmax(48px, 64px);
+  grid-template-columns: minmax(240px, 28%) 1fr;
   gap: 3.5rem;
   align-items: start;
 }
@@ -46,18 +49,475 @@
   margin-bottom: 2rem;
 }
 
-/* Decorative vertical thumbnail rail, right edge */
-.about-intro__thumbs {
-  display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
-  padding-top: 0.5rem;
+/* ---------- Pull quote ----------
+   A visual break between the intro and the rest of the page - reuses
+   .story-text__lede's word-by-word scroll reveal (js/story.js already
+   selects every .story-text__lede on the page), just restyled bigger
+   and left-aligned to the intro title above it. Loads after story.css
+   so this wins the (equal-specificity) cascade against the base rule. */
+.about-pull-quote {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
 }
 
-.about-intro__thumb {
+/* Mirrors .about-intro__grid's own two-column split so the quote's
+   left edge lands in the same spot as "ANUJ" above it (the second
+   column) at any viewport width, rather than the section's raw
+   padding edge - the intro's image column eats a variable share of
+   the row (minmax(240px, 28%)), so only tracking that same grid
+   keeps the two edges lined up as it resizes. */
+.about-pull-quote__grid {
+  display: grid;
+  grid-template-columns: minmax(240px, 28%) 1fr;
+  gap: 3.5rem;
+}
+
+.pull-quote {
+  grid-column: 1 / -1;
+  font-family: var(--font-heading);
+  font-size: clamp(1.75rem, 4.2vw, 3rem);
+  line-height: 1.3;
+  text-align: center;
+  max-width: 780px;
+  margin: 0 auto;
+  /* Starting color for the scroll-linked fill in js/about.js - words
+     scrub from this muted tone up to full --text-color as the quote
+     passes through the viewport. Word opacity is scrubbed the same way
+     (js/about.js), replacing story.js's default one-shot word reveal
+     for this paragraph specifically. */
+  color: var(--card-border);
+}
+
+/* ---------- Mid-page heading placement ----------
+   .story-heading itself carries no margin on purpose (css/story.css) -
+   each instance sets its own, same pattern as project.html's
+   --script/--explorations/etc. */
+.story-heading--skills {
+  margin: 5rem 0 2.5rem;
+}
+
+/* Extra top margin vs. --skills - the tools marquee right above it
+   (its own 4rem bottom margin, css/about.css) reads as a footnote
+   tucked under Disciplines, so without more room here PROCESS felt
+   like it was crowding straight into it instead of starting its own
+   section. */
+.story-heading--process {
+  margin: 8rem 0 2.5rem;
+}
+
+/* ---------- Disciplines ----------
+   Text on the left, the four discipline tags as a 2x2 grid on the
+   right - same side-by-side rhythm as .story-block elsewhere on the
+   site, just with a tag grid standing in for the image slot. */
+.disciplines-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 3.5rem;
+  margin: 3rem 0 4rem;
+}
+
+.disciplines-row .story-text-block {
+  flex: 1 1 42%;
+  min-width: 260px;
+  margin: 0;
+}
+
+.skill-tags {
+  flex: 1 1 320px;
+  max-width: 420px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.skill-tag {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem 1rem 1.25rem;
+  border-radius: 10px;
+  background: #fff;
+  border: 1px solid var(--card-border);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  font-family: var(--font-caption);
+  font-size: 0.8rem;
+  color: var(--line-color);
+  text-align: center;
+  overflow: visible;
+  transition: box-shadow 0.3s ease;
+}
+
+/* Raised above sibling tags on hover/focus so a shape's boxes (which
+   deliberately escape the card via transform) render over neighbours
+   instead of being tucked behind them. */
+.skill-tag:hover,
+.skill-tag:focus-within {
+  z-index: 5;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.1);
+}
+
+/* ---------- Box shapes ----------
+   9 identical boxes, laid out as a plain 3x3 grid by default (the
+   literal "made of boxes" state). On hover/focus each box gets an
+   individual transform - translate/rotate/scale never affects layout,
+   so the grid position stays each box's origin and the shape below is
+   just a per-box delta from it. Every variant below only differs in
+   the destination transforms. */
+.skill-tag__shape {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, 24px);
+  grid-template-rows: repeat(3, 24px);
+  gap: 4px;
+  place-content: center;
+}
+
+.skill-tag__box {
   width: 100%;
-  aspect-ratio: 1 / 1;
-  background-color: var(--card-bg-alt);
+  height: 100%;
+  border-radius: 4px;
+  background: var(--card-border);
+  transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1), background-color 0.4s ease, border-radius 0.4s ease;
+}
+
+.skill-tag__label {
+  font-family: var(--font-caption);
+  font-size: 0.8rem;
+  color: var(--line-color);
+}
+
+/* Each discipline picks up one of the site's five category colors on
+   hover (see prompt.md §2/§7) where it actually maps to one -
+   Information Design reads closest to Visual Journalism in this
+   site's own taxonomy (both are data/story-driven). Industrial
+   Design has no match in the five, so it stays neutral. */
+.skill-tag--graphic:hover .skill-tag__box,
+.skill-tag--graphic:focus-within .skill-tag__box {
+  background: var(--color-graphic-design);
+}
+
+.skill-tag--information:hover .skill-tag__box,
+.skill-tag--information:focus-within .skill-tag__box {
+  background: var(--color-visual-journalism);
+}
+
+.skill-tag--game:hover .skill-tag__box,
+.skill-tag--game:focus-within .skill-tag__box {
+  background: var(--color-game-design);
+}
+
+.skill-tag--industrial:hover .skill-tag__box,
+.skill-tag--industrial:focus-within .skill-tag__box {
+  background: var(--dot-color);
+}
+
+/* Graphic design - a loose abstract collage: every box scatters to its
+   own rotation/scale, and the even ones round into circles so the
+   result reads as a mixed shape composition rather than just a
+   scrambled grid. */
+.skill-tag--graphic:hover .skill-tag__box:nth-child(1),
+.skill-tag--graphic:focus-within .skill-tag__box:nth-child(1) { transform: translate(-10px, -34px) rotate(-18deg) scale(1.3); }
+.skill-tag--graphic:hover .skill-tag__box:nth-child(2),
+.skill-tag--graphic:focus-within .skill-tag__box:nth-child(2) { transform: translate(30px, -40px) rotate(30deg) scale(0.65); border-radius: 50%; }
+.skill-tag--graphic:hover .skill-tag__box:nth-child(3),
+.skill-tag--graphic:focus-within .skill-tag__box:nth-child(3) { transform: translate(-36px, -6px) rotate(12deg) scale(1.15); }
+.skill-tag--graphic:hover .skill-tag__box:nth-child(4),
+.skill-tag--graphic:focus-within .skill-tag__box:nth-child(4) { transform: translate(40px, 10px) rotate(-25deg) scale(0.8); }
+.skill-tag--graphic:hover .skill-tag__box:nth-child(5),
+.skill-tag--graphic:focus-within .skill-tag__box:nth-child(5) { transform: translate(-14px, 4px) rotate(40deg) scale(1.4); border-radius: 50%; }
+.skill-tag--graphic:hover .skill-tag__box:nth-child(6),
+.skill-tag--graphic:focus-within .skill-tag__box:nth-child(6) { transform: translate(12px, -18px) rotate(-35deg) scale(0.6); }
+.skill-tag--graphic:hover .skill-tag__box:nth-child(7),
+.skill-tag--graphic:focus-within .skill-tag__box:nth-child(7) { transform: translate(-30px, 34px) rotate(22deg) scale(0.95); }
+.skill-tag--graphic:hover .skill-tag__box:nth-child(8),
+.skill-tag--graphic:focus-within .skill-tag__box:nth-child(8) { transform: translate(20px, 38px) rotate(-14deg) scale(1.2); border-radius: 50%; }
+.skill-tag--graphic:hover .skill-tag__box:nth-child(9),
+.skill-tag--graphic:focus-within .skill-tag__box:nth-child(9) { transform: translate(-4px, 14px) rotate(18deg) scale(0.75); }
+
+/* Information design - an ascending bar chart: the 9 boxes regroup
+   into three columns (heights 2/3/4 boxes) sharing a common baseline,
+   short to tall left-to-right. Boxes 3/5/8's deltas were previously
+   landing all four of them (with 2) on the exact same spot instead of
+   filling out their own column - fixed so all 9 land on distinct
+   cells and the shape reads cleanly instead of boxes visibly
+   colliding/hopping on hover. */
+.skill-tag--information:hover .skill-tag__box:nth-child(1),
+.skill-tag--information:focus-within .skill-tag__box:nth-child(1) { transform: translate(0, 56px); }
+.skill-tag--information:hover .skill-tag__box:nth-child(2),
+.skill-tag--information:focus-within .skill-tag__box:nth-child(2) { transform: translate(0, 0); }
+.skill-tag--information:hover .skill-tag__box:nth-child(3),
+.skill-tag--information:focus-within .skill-tag__box:nth-child(3) { transform: translate(-28px, 56px); }
+.skill-tag--information:hover .skill-tag__box:nth-child(4),
+.skill-tag--information:focus-within .skill-tag__box:nth-child(4) { transform: translate(28px, 0); }
+.skill-tag--information:hover .skill-tag__box:nth-child(5),
+.skill-tag--information:focus-within .skill-tag__box:nth-child(5) { transform: translate(28px, -28px); }
+.skill-tag--information:hover .skill-tag__box:nth-child(6),
+.skill-tag--information:focus-within .skill-tag__box:nth-child(6) { transform: translate(0, 28px); }
+.skill-tag--information:hover .skill-tag__box:nth-child(7),
+.skill-tag--information:focus-within .skill-tag__box:nth-child(7) { transform: translate(56px, -28px); }
+.skill-tag--information:hover .skill-tag__box:nth-child(8),
+.skill-tag--information:focus-within .skill-tag__box:nth-child(8) { transform: translate(-28px, -28px); }
+.skill-tag--information:hover .skill-tag__box:nth-child(9),
+.skill-tag--information:focus-within .skill-tag__box:nth-child(9) { transform: translate(0, -84px); }
+
+/* Game design - a d-pad (the 5 boxes already sitting in a plus/cross
+   layout by default stay put) plus a small rotated button cluster to
+   the right, standing in for a controller. The d-pad's own cross is
+   centered at 0 by default, but the button cluster's diamond was
+   centered around x=56 with nothing to balance it - the whole
+   composition's bounding box sat well right of center. Every x is
+   shifted -24px (the d-pad's cross now sits centered on the left,
+   the buttons' diamond on the right) so the two clusters' combined
+   bounding box is centered in the card instead of skewed. */
+.skill-tag--game:hover .skill-tag__box:nth-child(2),
+.skill-tag--game:focus-within .skill-tag__box:nth-child(2),
+.skill-tag--game:hover .skill-tag__box:nth-child(4),
+.skill-tag--game:focus-within .skill-tag__box:nth-child(4),
+.skill-tag--game:hover .skill-tag__box:nth-child(5),
+.skill-tag--game:focus-within .skill-tag__box:nth-child(5),
+.skill-tag--game:hover .skill-tag__box:nth-child(6),
+.skill-tag--game:focus-within .skill-tag__box:nth-child(6),
+.skill-tag--game:hover .skill-tag__box:nth-child(8),
+.skill-tag--game:focus-within .skill-tag__box:nth-child(8) { transform: translate(-24px, 0); }
+.skill-tag--game:hover .skill-tag__box:nth-child(1),
+.skill-tag--game:focus-within .skill-tag__box:nth-child(1) { transform: translate(32px, -14px) rotate(45deg) scale(0.85); }
+.skill-tag--game:hover .skill-tag__box:nth-child(3),
+.skill-tag--game:focus-within .skill-tag__box:nth-child(3) { transform: translate(52px, 0) rotate(45deg) scale(0.85); }
+.skill-tag--game:hover .skill-tag__box:nth-child(7),
+.skill-tag--game:focus-within .skill-tag__box:nth-child(7) { transform: translate(32px, 14px) rotate(45deg) scale(0.85); }
+.skill-tag--game:hover .skill-tag__box:nth-child(9),
+.skill-tag--game:focus-within .skill-tag__box:nth-child(9) { transform: translate(12px, 0) rotate(45deg) scale(0.85); }
+
+/* Industrial design - a stepped building/ziggurat: 1 box on top, 3
+   below, 5 across the base, all sharing a common baseline. Every
+   delta's y is shifted +28px from the original (which put the base
+   row at the shape's vertical center and the top box a full row
+   above the default grid's own top edge, poking past the card) - the
+   base row now sits exactly on the default grid's bottom edge and
+   the top box on its top edge, so the ziggurat fits inside the card
+   with the same silhouette. */
+.skill-tag--industrial:hover .skill-tag__box:nth-child(1),
+.skill-tag--industrial:focus-within .skill-tag__box:nth-child(1) { transform: translate(28px, 0); }
+.skill-tag--industrial:hover .skill-tag__box:nth-child(2),
+.skill-tag--industrial:focus-within .skill-tag__box:nth-child(2) { transform: translate(-28px, 28px); }
+.skill-tag--industrial:hover .skill-tag__box:nth-child(3),
+.skill-tag--industrial:focus-within .skill-tag__box:nth-child(3) { transform: translate(-28px, 28px); }
+.skill-tag--industrial:hover .skill-tag__box:nth-child(4),
+.skill-tag--industrial:focus-within .skill-tag__box:nth-child(4) { transform: translate(56px, 0); }
+.skill-tag--industrial:hover .skill-tag__box:nth-child(5),
+.skill-tag--industrial:focus-within .skill-tag__box:nth-child(5) { transform: translate(-56px, 28px); }
+.skill-tag--industrial:hover .skill-tag__box:nth-child(6),
+.skill-tag--industrial:focus-within .skill-tag__box:nth-child(6) { transform: translate(-56px, 28px); }
+.skill-tag--industrial:hover .skill-tag__box:nth-child(7),
+.skill-tag--industrial:focus-within .skill-tag__box:nth-child(7) { transform: translate(28px, 0); }
+.skill-tag--industrial:hover .skill-tag__box:nth-child(8),
+.skill-tag--industrial:focus-within .skill-tag__box:nth-child(8) { transform: translate(28px, 0); }
+.skill-tag--industrial:hover .skill-tag__box:nth-child(9),
+.skill-tag--industrial:focus-within .skill-tag__box:nth-child(9) { transform: translate(28px, 0); }
+
+/* Example list - hidden as a floating card above the tag, revealed on
+   hover/focus. Anchored to the tag itself (not the grid cell) so it
+   floats free of the other tiles instead of being clipped by them. */
+.skill-tag__examples {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 12px);
+  transform: translate(-50%, 6px);
+  width: max-content;
+  max-width: 200px;
+  padding: 0.85rem 1rem;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid var(--card-border);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.14);
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+  text-align: left;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 5;
+}
+
+.skill-tag__examples::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: #fff;
+}
+
+.skill-tag:hover .skill-tag__examples,
+.skill-tag:focus-within .skill-tag__examples {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+  pointer-events: auto;
+}
+
+/* ---------- Process ----------
+   Six steps on one connecting line, each number punched through it -
+   same "axis line through markers" idea as the Archive timeline
+   elsewhere on the site, in a simpler static form. */
+.process-flow {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  list-style: none;
+  /* Bottom margin bumped past .story-image--full's own 6rem top
+     margin (css/story.css) - adjacent margins collapse to the larger
+     one, so matching it left the "recent work" image crowding
+     straight into the process steps above. */
+  margin: 3rem 0 10rem;
+  padding: 0;
+}
+
+.process-flow::before {
+  content: '';
+  position: absolute;
+  top: 14px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--card-border);
+  z-index: 0;
+}
+
+.process-step {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  text-align: center;
+}
+
+.process-step__index {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  margin-bottom: 1.1rem;
+  border-radius: 50%;
+  /* Matches the page background so the connector line above visually
+     stops at each circle instead of running straight through it. */
+  background: var(--bg-color);
+  border: 1px solid var(--line-color);
+  font-family: var(--font-caption);
+  font-size: 0.7rem;
+  color: var(--line-color);
+}
+
+.process-step__label {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.process-step__desc {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: var(--text-muted);
+  max-width: 165px;
+  margin: 0 auto;
+}
+
+/* ---------- Tools ----------
+   A subtle auto-scrolling row rather than a static list - "Tools I
+   work with" reads as a strip of real tools referenced elsewhere on
+   the site (case-study meta-lists, timeline.csv), not a fresh claim.
+   Sits right under the Disciplines row now (no heading of its own),
+   so it reads as a footnote rather than a new section. */
+.about-tools__label {
+  text-align: left;
+  margin: 0 0 1.5rem;
+}
+
+.tools-marquee {
+  overflow: hidden;
+  margin: 0 0 4rem;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+
+.tools-marquee__track {
+  display: flex;
+  gap: 0.75rem;
+  width: max-content;
+  /* The track's own content is the tag list duplicated once in the
+     HTML - at the halfway point (-50%) it's showing an identical copy
+     of where it started, so the loop has no visible seam or jump. */
+  animation: toolsMarquee 34s linear infinite;
+}
+
+.tool-tag {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  padding: 0.55rem 1.15rem;
+  border-radius: 999px;
+  background: var(--card-bg-alt);
+  border: 1px solid var(--card-border);
+  font-family: var(--font-caption);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.tool-tag__logo {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  color: var(--line-color);
+}
+
+@keyframes toolsMarquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ---------- Closing ---------- */
+.about-closing {
+  text-align: center;
+  max-width: 620px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.about-closing__links {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+/* The only place a .story-image-label wraps a link (the showcase
+   caption below) - same caption type, just picking up the standard
+   link hover treatment. */
+.story-image-label a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.story-image-label a:hover {
+  opacity: 0.7;
 }
 
 @media (max-width: 900px) {
@@ -66,16 +526,90 @@
     gap: 2rem;
   }
 
-  .about-intro__thumbs {
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
-
-  .about-intro__thumb {
-    width: 48px;
-  }
-
   .about-intro__image-wrapper .hero-image-mask {
     height: 320px;
   }
+
+  /* Matches .about-intro__grid collapsing to one column above - the
+     quote's own grid must collapse the same way or grid-column: 2
+     has no second column left to sit in. */
+  .about-pull-quote__grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .disciplines-row {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .skill-tags {
+    max-width: none;
+  }
+
+  .process-flow {
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .process-flow::before {
+    /* A single horizontal line makes no sense once the steps stack -
+       a vertical one down the row of circles instead. */
+    top: 0;
+    bottom: 0;
+    left: 14px;
+    right: auto;
+    width: 1px;
+    height: auto;
+  }
+
+  .process-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.25rem;
+    text-align: left;
+  }
+
+  .process-step__index {
+    margin-bottom: 0;
+    flex-shrink: 0;
+  }
+
+  .process-step__desc {
+    max-width: none;
+    margin: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tools-marquee__track {
+    animation: none;
+  }
+}
+
+/* ---------- "Recent work" cursor dot ----------
+   Small solid-black circle standing in for the native pointer while
+   hovering the ITC link (see js/about.js) - same follow-the-mouse
+   pattern as .custom-cursor (css/case-study.css) and the lightbox's
+   own cursor (css/story.css), just a plain filled dot instead of an
+   icon badge. */
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 14px;
+  height: 14px;
+  margin: -7px 0 0 -7px;
+  border-radius: 50%;
+  background: #000;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0;
+  transform: scale(0.4);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.cursor-dot.is-active {
+  opacity: 1;
+  transform: scale(1);
 }

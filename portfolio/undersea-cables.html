@@ -7,12 +7,12 @@
     css/story.css + css/case-study.css (+ js/common.js, js/story.js,
     js/case-study.js), plus css/case-study-alt.css shared by this
     page's "alternate layout" family - a genuinely different rhythm
-    from project.html and bajaj-finance.html (DATA/DESIGN headings
+    from project.html and airtel.html (DATA/DESIGN headings
     instead of SCRIPT/EXPLORATIONS, paragraphs stacked over their own
     image instead of beside it), built from the same shared
     components. See also lightrock.html and revenue-growth.html, the
     other pages in this family.
-    Series order: project.html -> undersea-cables.html -> bajaj-finance.html -> lightrock.html -> revenue-growth.html
+    Series order: project.html -> undersea-cables.html -> airtel.html -> lightrock.html -> revenue-growth.html
   -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,6 +33,7 @@
   <header class="site-header">
     <a href="index.html" class="site-header__brand">Anuj<br>Debnath</a>
     <nav class="site-nav">
+      <a class="site-nav__link" href="index.html">home</a>
       <a class="site-nav__link" href="aboutme.html">about me</a>
       <a class="site-nav__link" href="index.html#works">works</a>
       <a class="site-nav__link" href="index.html#connect">connect</a>
@@ -42,7 +43,7 @@
   <!-- ============ CASE STUDY HERO ============ -->
   <section id="case-study-hero" class="section">
     <div class="case-study-hero">
-      <div class="case-study-hero__image" id="caseStudyHeroImage"></div>
+      <div class="case-study-hero__image" id="caseStudyHeroImage"><img src="images/undersea-cables/00-cover.png" alt="Undersea Cables cover" onerror="this.remove()"></div>
 
       <div class="case-study-hero__content">
         <h1 class="section-title case-study-hero__title" id="case-study-title">UNDERSEA CABLES</h1>
@@ -69,7 +70,7 @@
         <p class="story-text__lede">"India's internet runs on cables it cannot protect, repair, or regulate — in spite of knowing exactly how to go about it."</p>
         <p class="story-text__body">I worked with an independent writer on a piece built around this brief — nominally about Meta's new undersea cable connecting LA and Vizag, but really about the wider, fragile network of undersea cables India depends on, set against the backdrop of the Strait of Hormuz conflict. The goal was to visualise these stress points: even an anchor strike on a cable can trigger losses running into billions of dollars.</p>
       </div>
-      <div class="story-image"></div>
+      <div class="story-image"><img src="images/undersea-cables/01.png" alt="Undersea Cables — image 01" onerror="this.remove()"></div>
     </div>
 
     <!-- Data -->
@@ -81,8 +82,40 @@
     </div>
 
     <div class="story-image-row">
-      <div class="story-image"></div>
-      <div class="story-image"></div>
+      <div class="doc-frame">
+        <div class="doc-frame__titlebar">
+          <svg class="doc-frame__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <rect x="2" y="1" width="20" height="22" rx="2" fill="#185ABD"/>
+            <text x="12" y="16.5" font-family="Arial, sans-serif" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">W</text>
+          </svg>
+          <span class="doc-frame__filename">cable-data.js — raw GitHub export</span>
+        </div>
+        <div class="doc-frame__page">
+          <pre class="doc-frame__code">const cableData = [
+  {
+    "type": "Feature",
+    "geometry": {
+      "coordinates": [
+        [[44.55, 11.24], [43.31, 12.62],
+         [42.98, 13.05], [38.25, 20.38]], ...
+      ]
+    },
+    "properties": {
+      "name": "2Africa",
+      "length": "45,000 km",
+      "owners": "Bayobab, China Mobile,
+        Meta, Orange, Vodafone, ...",
+      "landing_points": [
+        { "name": "Luanda, Angola" },
+        { "name": "Manama, Bahrain" }, ...
+      ]
+    }
+  },
+  ...
+]</pre>
+        </div>
+      </div>
+      <div class="story-image"><img src="images/undersea-cables/03.png" alt="Undersea Cables — image 03" onerror="this.remove()"></div>
     </div>
     <div class="story-columns">
       <div class="story-columns__spacer" aria-hidden="true"></div>
@@ -94,7 +127,7 @@
 
     <!-- Design -->
     <h2 class="section-title story-heading story-heading--design">DESIGN</h2>
-    <div class="story-image story-image--full"></div>
+    <div class="story-image story-image--full story-image--rise"><img src="images/undersea-cables/04.png" alt="Undersea Cables — image 04" onerror="this.remove()"></div>
 
     <div class="story-columns">
       <div class="story-columns__spacer story-columns__spacer--wide" aria-hidden="true"></div>
@@ -102,25 +135,19 @@
         <p class="story-text__lede">The base visualisation was generated with Google Gemini and JavaScript libraries.</p>
         <p class="story-text__body"><strong>OpenStreetMap + Leaflet + GitHub</strong> for an accurate map of India, including correct depiction of disputed territories, superimposed over the base layer.</p>
         <p class="story-text__body"><strong>eCharts</strong> for interactive tooltips showing detailed cable information on hover.</p>
-        <div class="story-image story-stack-image"></div>
-      </div>
-    </div>
-
-    <div class="story-block">
-      <div class="story-text">
         <p class="story-text__lede">With the functional visualisation in place, I built out the visual design in Figma.</p>
         <p class="story-text__body">This was created using reference of existing layout conventions and The Ken's internal chart guidelines — including typefaces (Jazmin Alt, GT America) and the established colour palette.</p>
+        <div class="story-image story-stack-image"><img src="images/undersea-cables/05.png" alt="Undersea Cables — image 05" onerror="this.remove()"></div>
       </div>
-      <div class="story-image"></div>
     </div>
 
     <div class="story-columns">
       <div>
-        <p class="story-text__lede">A second tab/state was added to the map, focused specifically on the Meta LA–Vizag cable.</p>
-        <div class="story-image story-stack-image"></div>
+        <p class="story-text__body">This was created to give the reader direct context for the story's headline subject. Geographic zones central to the narrative — the Strait of Hormuz and India — were explicitly demarcated on the map for clarity.</p>
       </div>
       <div>
-        <p class="story-text__body">This was created to give the reader direct context for the story's headline subject. Geographic zones central to the narrative — the Strait of Hormuz and India — were explicitly demarcated on the map for clarity.</p>
+        <p class="story-text__lede">A second tab/state was added to the map, focused specifically on the Meta LA–Vizag cable.</p>
+        <div class="story-image story-stack-image"><img src="images/undersea-cables/06.png" alt="Undersea Cables — image 06" onerror="this.remove()"></div>
       </div>
     </div>
 
@@ -128,7 +155,7 @@
       <p class="story-text__lede">The final visualisation was embedded into the story via an iframe, and published on 16th April.</p>
     </div>
     <div class="story-iframe-wrapper">
-      <iframe class="story-iframe" src="prototypes/UnderseaCables/index.html" title="Undersea Cables - interactive visualisation" loading="lazy"></iframe>
+      <iframe class="story-iframe story-iframe--fit" src="prototypes/UnderseaCables/index.html" title="Undersea Cables - interactive visualisation" loading="lazy"></iframe>
     </div>
   </section>
 
@@ -138,7 +165,7 @@
       <a href="project.html" class="case-study-pager-preview case-study-pager-preview--back">
         <div class="story-overlap">
           <span class="section-title case-study-pager__label story-overlap__heading back-header">BACK</span>
-          <div class="story-image"></div>
+          <div class="story-image"><img src="images/project/00-cover.png" alt="Intermission // ITC cover" onerror="this.remove()"></div>
         </div>
         <p class="case-study-pager-preview__lede">ITC: The FMCG Company in a Cigarette Pack &mdash; from Imperial Tobacco to one of India's most diversified conglomerates.</p>
         <div class="meta-list">
@@ -148,12 +175,12 @@
         </div>
       </a>
 
-      <a href="bajaj-finance.html" class="case-study-pager-preview case-study-pager-preview--next">
+      <a href="airtel.html" class="case-study-pager-preview case-study-pager-preview--next">
         <div class="story-overlap">
           <span class="section-title case-study-pager__label story-overlap__heading next-header">NEXT</span>
-          <div class="story-image"></div>
+          <div class="story-image"><img src="images/airtel/00-cover.png" alt="Intermission // Airtel cover" onerror="this.remove()"></div>
         </div>
-        <p class="case-study-pager-preview__lede">Bajaj Finance: A Bank in All But Name &mdash; the story of a family business split, and the branch that grew into a lending giant.</p>
+        <p class="case-study-pager-preview__lede">Airtel: A Bank in All But Name &mdash; the story of a family business split, and the branch that grew into a lending giant.</p>
         <div class="meta-list">
           <span>17/09/2026</span>
           <span>The-Ken/Intermission</span>
@@ -166,20 +193,18 @@
   <!-- ============ FOOTER ============ -->
   <section class="section contact-section">
     <div class="contact-details">
-      <a class="contact-details__line" href="tel:+910000000000">+91 00000 00000</a>
-      <a class="contact-details__line" href="mailto:hello@anujdebnath.com">hello@anujdebnath.com</a>
+      <a class="contact-details__line" href="tel:+919874608128">+91 98746 08128</a>
+      <a class="contact-details__line" href="mailto:anujdebnath246@gmail.com">anujdebnath246@gmail.com</a>
     </div>
 
     <div class="contact-social-row">
-      <a class="link-arrow" href="#" target="_blank" rel="noopener">Instagram &#8599;</a>
-      <a class="link-arrow" href="#" target="_blank" rel="noopener">Telegram &#8599;</a>
-      <a class="link-arrow" href="#" target="_blank" rel="noopener">Facebook &#8599;</a>
+      <a class="link-arrow" href="https://www.instagram.com/codegarden.space/" target="_blank" rel="noopener">Instagram &#8599;</a>
+      <a class="link-arrow" href="https://medium.com/@radioactivesugar" target="_blank" rel="noopener">Medium &#8599;</a>
     </div>
 
     <div class="footer-columns">
       <ul class="footer-nav">
         <li><a class="footer-nav__link" href="aboutme.html">About Me</a></li>
-        <li><a class="footer-nav__link" href="#">Services</a></li>
         <li><a class="footer-nav__link" href="index.html#works">Works</a></li>
       </ul>
 
@@ -191,9 +216,9 @@
     </div>
 
     <div class="footer-links-row">
-      <a class="footer-links-row__link" href="#" target="_blank" rel="noopener">[ Dribbble ]</a>
-      <a class="footer-links-row__link" href="#" target="_blank" rel="noopener">[ Behance ]</a>
-      <a class="footer-links-row__link" href="#" target="_blank" rel="noopener">[ LinkedIn ]</a>
+      <a class="footer-links-row__link" href="https://radioactive-sugar.itch.io/" target="_blank" rel="noopener">[ itch.io ]</a>
+      <a class="footer-links-row__link" href="https://www.behance.net/anujdebnat6978" target="_blank" rel="noopener">[ Behance ]</a>
+      <a class="footer-links-row__link" href="https://www.linkedin.com/in/anuj-debnath-150407163/" target="_blank" rel="noopener">[ LinkedIn ]</a>
     </div>
 
     <h2 class="footer-wordmark" id="footer-wordmark">ANUJ DEBNATH</h2>
@@ -203,6 +228,14 @@
     <span class="footer-bottom__location" id="footerClock">INDIA: (GMT+5:30) --:--</span>
     <span class="footer-bottom__credit">Design &amp; Development &mdash; Anuj Debnath</span>
     <span class="footer-bottom__copyright">2026 All Rights Reserved. Anuj Debnath. Any reproduction, distribution, or use of the materials without permission is prohibited.</span>
+  </div>
+
+  <!-- Custom "expand" cursor shown over the BACK/NEXT pager previews -->
+  <div class="custom-cursor" id="customCursor" aria-hidden="true">
+    <svg viewBox="0 0 24 24">
+      <line x1="7" y1="17" x2="17" y2="7"></line>
+      <polyline points="8 7 17 7 17 16"></polyline>
+    </svg>
   </div>
 
   <script src="js/common.js"></script>

@@ -55,7 +55,7 @@
 
 :root {
   /* Color tokens */
-  --bg-color: #f4f4f4;
+  --bg-color: #ffffff;
   --bg-color-alt: #f5f5f7;
   --text-color: #000000;
   --text-muted: #555555;
@@ -67,6 +67,18 @@
   --dot-color: #888888;
   --section-header-bg: #efefef;
   --line-color: #1d1d1f;
+
+  /* The five Archive/category colors - single source of truth for the
+     site's only accent colors, mirrored in js/main.js's
+     archiveCategoryColors (that copy drives the eCharts bubbles/legend,
+     which can't read a CSS custom property; keep the two in sync by
+     hand if either changes). Reach for one of these five when a new
+     component needs to signal a category - never a new accent color. */
+  --color-visual-journalism: #e05d5d;
+  --color-graphic-design: #2b9348;
+  --color-game-design: #e3a008;
+  --color-web-development: #3182ce;
+  --color-creatives: #805ad5;
 
   /* Layout tokens */
   --max-width: 1240px;
@@ -92,13 +104,59 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Site-wide ambient gradient - a soft, page-length wash drawn from
+   the same 5 category accent colors used everywhere else (Archive
+   legend dots, work-card categories - see --color-* tokens above),
+   just heavily lightened toward white. It runs top to bottom across
+   the full page height (not the viewport), so scrolling through a
+   page reads as passing through a gentle progression of colour
+   rather than a flat backdrop - literal "sense of progress" tied to
+   the same palette that already organizes the work.
+   Layers (back to front in background-image, so listed front-first
+   here per the CSS spec): grain texture on top, a slow-drifting
+   soft colour blob in the middle for a little life/motion, and the
+   scroll-mapped progress gradient on the bottom. Kept extremely
+   subtle - low alpha throughout - so it reads as "white site with a
+   hint of warmth," never as a colourful background fighting the
+   content. Motion is tiny, slow (60s), and fully OFF for
+   prefers-reduced-motion. */
 body {
   font-family: var(--font-body);
   background-color: var(--bg-color);
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.035 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    radial-gradient(640px 640px at 20% 30%, rgba(224, 93, 93, 0.05), transparent 70%),
+    linear-gradient(180deg,
+      #ffffff 0%,
+      #fdf3e3 12%,
+      #fbeae8 26%,
+      #f5eefb 42%,
+      #eaf2fb 58%,
+      #e9f6ee 74%,
+      #ffffff 90%,
+      #ffffff 100%
+    );
+  background-repeat: repeat, no-repeat, no-repeat;
+  background-position: 0 0, 20% 30%, center top;
+  background-size: 220px 220px, auto, 100% 100%;
+  background-attachment: fixed, scroll, scroll;
+  animation: ambientDrift 60s ease-in-out infinite alternate;
   color: var(--text-color);
   min-height: 100vh;
   overflow-x: hidden;
   position: relative;
+}
+
+@keyframes ambientDrift {
+  0%   { background-position: 0 0, 20% 30%, center top; }
+  50%  { background-position: 0 0, 38% 58%, center top; }
+  100% { background-position: 0 0, 20% 30%, center top; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body {
+    animation: none;
+  }
 }
 
 /* Any real heading tag defaults to the header font; the footer
@@ -165,11 +223,10 @@ h1, h2, h3, h4, h5, h6 {
   padding: 4rem var(--section-pad-x) 6rem;
 }
 
-/* Light grey rounded block that sits behind a section's
-   title + subtitle (used by the Work and Contact sections) */
+/* Wraps a section's title + subtitle (used by the Work and Contact
+   sections) - no background of its own anymore, just the spacing, so
+   the ambient gradient behind the page shows through here too. */
 .section-header-block {
-  background-color: var(--section-header-bg);
-  border-radius: 6px;
   padding: 3rem 2rem 3.5rem;
   text-align: center;
   margin-bottom: 3rem;

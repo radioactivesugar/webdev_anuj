@@ -6,6 +6,15 @@
   padding-bottom: 0;
 }
 
+/* index.html/index_linked.html only: #works (ending with the
+   archive timeline) sits directly above this section there - match
+   .work-section's own 2rem top padding (css/work.css) so the gap
+   into CONTACT reads the same as the gap into WORK, instead of
+   the base .section's larger 4rem default making it look bigger. */
+#works + .contact-section {
+  padding-top: 2rem;
+}
+
 /* Phone / email block, right aligned */
 .contact-details {
   text-align: right;

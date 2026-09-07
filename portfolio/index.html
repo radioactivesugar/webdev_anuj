@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Anuj Debnath - Portfolio</title>
 
-  <link rel="stylesheet" href="/portfolio/css/style.css">
-  <link rel="stylesheet" href="/portfolio/css/hero.css">
-  <link rel="stylesheet" href="/portfolio/css/work.css">
-  <link rel="stylesheet" href="/portfolio/css/contact.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/hero.css">
+  <link rel="stylesheet" href="/css/work.css">
+  <link rel="stylesheet" href="/css/contact.css">
 
   <!-- GSAP + ECharts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -18,9 +18,10 @@
 
   <!-- ============ SITE HEADER ============ -->
   <header class="site-header">
-    <a href="/portfolio/index.html" class="site-header__brand">Anuj<br>Debnath</a>
+    <a href="/index.html" class="site-header__brand">Anuj<br>Debnath</a>
     <nav class="site-nav">
-      <a class="site-nav__link" href="/portfolio/aboutme.html">about me</a>
+      <a class="site-nav__link" href="/index.html">home</a>
+      <a class="site-nav__link" href="/aboutme.html">about me</a>
       <a class="site-nav__link" href="#works">works</a>
       <a class="site-nav__link" href="#connect">connect</a>
     </nav>
@@ -31,135 +32,61 @@
 
     <div class="hero-title-wrapper">
       <h1 class="section-title hero-title" id="hero-title">DESIGNER</h1>
-      <div class="section-subtitle hero-subtitle">BASED IN INDIA</div>
+      <div class="section-subtitle hero-subtitle">BASED IN INDI<span id="heroSubtitleLastLetter">A</span></div>
     </div>
 
     <div class="hero-content-grid">
-      <!-- Left image block -->
+      <!-- Image block - the interactive skill nodes that used to sit
+           beside this are gone; the Archive timeline below (moved up
+           from the WORK section) takes over as the hero's main
+           interactive content instead. -->
       <div class="hero-image-wrapper">
         <div class="hero-image-card-bg"></div>
         <div class="hero-image-mask" id="heroImageMask">
-          <div class="hero-image-placeholder"></div>
+          <div class="hero-image-placeholder"><img src="images/index/00-cover.png" alt="Homepage hero" onerror="this.remove()"></div>
         </div>
         <div class="hero-image-caption">
           <h3>Visual Data Journalist</h3>
           <p>at The Ken</p>
         </div>
       </div>
-
-      <!-- Interactive skill nodes - the same 5 categories as the
-           Archive timeline below (js/main.js's archiveCategories),
-           so the dot colors and names line up with that legend. -->
-      <div class="hero-nodes-container">
-        <div class="hero-node" style="top: 12%; left: 18%;" data-node="web">
-          <span class="hero-node__dot"></span>
-          <span class="hero-node__label">Web Development</span>
-        </div>
-
-        <div class="hero-node" style="top: 12%; left: 68%;" data-node="graphic">
-          <span class="hero-node__dot"></span>
-          <span class="hero-node__label">Graphic Design</span>
-        </div>
-
-        <div class="hero-node" style="top: 50%; left: 4%;" data-node="creatives">
-          <span class="hero-node__dot"></span>
-          <span class="hero-node__label">Creatives</span>
-        </div>
-
-        <div class="hero-node" style="top: 50%; left: 78%;" data-node="game">
-          <span class="hero-node__dot"></span>
-          <span class="hero-node__label">Game Design</span>
-        </div>
-
-        <div class="hero-node" style="top: 85%; left: 42%;" data-node="visual">
-          <span class="hero-node__dot"></span>
-          <span class="hero-node__label">Visual Journalism</span>
-        </div>
-      </div>
     </div>
 
-    <!-- Floating info card -->
-    <div class="hero-info-card" id="heroInfoCard">
-      <div class="hero-info-card__preview"></div>
-      <div class="hero-info-card__content">
-        <p id="heroCardDesc">Using the understanding of systems and data, I design holistic visualisations and infographics for various projects.</p>
-        <h4>Some projects,</h4>
-        <ul id="heroCardLinks">
-          <li><a href="/portfolio/project.html">Intermission // ITC</a></li>
-          <li><a href="/portfolio/undersea-cables.html">Undersea Cables</a></li>
-          <li><a href="/portfolio/bajaj-finance.html">Intermission // Bajaj Finance</a></li>
-          <li><a href="/portfolio/lightrock.html">Investment Chart</a></li>
-          <li><a href="/portfolio/revenue-growth.html">Revenue Growth</a></li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ WORK SECTION ============ -->
-  <section id="works" class="section work-section">
-
-    <div class="section-header-block">
-      <h2 class="section-title" id="work-title">WORK</h2>
-      <p class="section-subtitle">Working as a designer and artist, it creates a idea.</p>
-    </div>
-
-    <h3 class="section-label">Featured</h3>
-
-    <div class="work-grid">
-      <a href="/portfolio/project.html" class="work-card work-card--primary">
-        <h4 class="work-card__title">Intermission//ITC</h4>
-        <div class="work-card__meta">
-          <span>17/09/2026</span>
-          <span>The-Ken/Intermission</span>
-          <span>eCharts, GSAP, OpenStreetMap, Leaflet, CSS, JavaScript, Figma, GitHub, Google Gemini, Claude Code</span>
-        </div>
-      </a>
-
-      <a href="/portfolio/undersea-cables.html" class="work-card work-card--tall">
-        <h4 class="work-card__title">Undersea Cables</h4>
-        <div class="work-card__meta">
-          <span>09/04/2026</span>
-          <span>The-Ken/Visual Stories</span>
-          <span>eCharts, GSAP, OpenStreetMap, Leaflet, Figma, GitHub, Google Gemini, Claude Code</span>
-        </div>
-      </a>
-
-      <a href="/portfolio/bajaj-finance.html" class="work-card work-card--tall-alt">
-        <h4 class="work-card__title">Intermission//Bajaj Finance</h4>
-        <div class="work-card__meta">
-          <span>17/09/2026</span>
-          <span>The-Ken/Intermission</span>
-          <span>eCharts, GSAP, Figma, GitHub, Google Gemini, Claude Code</span>
-        </div>
-      </a>
-
-      <a href="/portfolio/lightrock.html" class="work-card work-card--short">
-        <h4 class="work-card__title">Investment Chart</h4>
-        <div class="work-card__meta">
-          <span>09/04/2026</span>
-          <span>The-Ken/Visual Stories</span>
-          <span>eCharts, iFrame, Figma, GitHub, Google Gemini</span>
-        </div>
-      </a>
-
-      <a href="/portfolio/revenue-growth.html" class="work-card work-card--short-alt">
-        <h4 class="work-card__title">Revenue Growth</h4>
-        <div class="work-card__meta">
-          <span>09/04/2026</span>
-          <span>The-Ken/Visual Stories</span>
-          <span>eCharts, iFrame, Figma, GitHub, Google Gemini, Claude Code</span>
-        </div>
-      </a>
-    </div>
-
-    <!-- ===== Archive timeline (ported from timeline.html) ===== -->
+    <!-- ===== Archive timeline (ported from timeline.html; moved up
+         from the WORK section below) - no "Archive" heading here,
+         it reads as the hero's own content now. Hovering a legend
+         button also drives the floating info-card below (rewired
+         from the old hero nodes - js/main.js). ===== -->
     <div class="archive-block">
-      <h3 class="archive-title">Archive</h3>
-
       <!-- One continuous full-width panel behind the legend, the
            timeline, and the picture gallery - previously this grey
            background only sat behind the chart itself. -->
       <div class="archive-panel">
+        <div class="archive-chart-wrapper" id="archiveChartWrapper">
+          <div class="archive-chart" id="archiveChart"></div>
+
+          <div class="archive-tooltip" id="archiveTooltip">
+            <!-- Only shown when the project has a real link (see js/main.js) - stays
+                 reachable/clickable via the sticky-hover check in js/main.js even
+                 though the tooltip itself is pointer-events:none. -->
+            <a class="archive-tooltip__link" id="archiveTooltipLink" href="#" target="_blank" rel="noopener" aria-label="Open project link">
+              <svg class="archive-tooltip__link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                <polyline points="15 3 21 3 21 9"/>
+                <line x1="10" y1="14" x2="21" y2="3"/>
+              </svg>
+            </a>
+            <h2 class="archive-tooltip__title" id="archiveTooltipTitle">Project Title</h2>
+            <div class="archive-tooltip__subtitle" id="archiveTooltipSub">Category Details</div>
+            <div class="archive-tooltip__divider"></div>
+            <div class="archive-tooltip__date" id="archiveTooltipDate">20/08/2026</div>
+            <div class="archive-tooltip__org" id="archiveTooltipOrg">Duration: 1 week</div>
+            <div class="archive-tooltip__stack" id="archiveTooltipStack">HTML, Javascript, ECharts, GSAP</div>
+          </div>
+        </div>
+
+        <p class="archive-hint">Click on the legends to filter the bubbles</p>
+
         <div class="archive-filter-nav" id="archiveFilterNav">
           <button class="archive-filter-btn is-active" data-category="All">
             <span class="archive-filter-btn__dot" style="background-color: #1d1d1f;"></span>All
@@ -181,35 +108,132 @@
           </button>
         </div>
 
-        <div class="archive-chart-wrapper" id="archiveChartWrapper">
-          <div class="archive-chart" id="archiveChart"></div>
-
-          <div class="archive-tooltip" id="archiveTooltip">
-            <!-- Only shown when the project has a real link (see js/main.js) - stays
-                 reachable/clickable via the sticky-hover check in js/main.js even
-                 though the tooltip itself is pointer-events:none. -->
-            <a class="archive-tooltip__link" id="archiveTooltipLink" href="#" target="_blank" rel="noopener" aria-label="Open project link">
-              <svg class="archive-tooltip__link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/portfolio/>
-                <polyline points="15 3 21 3 21 9"/portfolio/>
-                <line x1="10" y1="14" x2="21" y2="3"/portfolio/>
-              </svg>
-            </a>
-            <h2 class="archive-tooltip__title" id="archiveTooltipTitle">Project Title</h2>
-            <div class="archive-tooltip__subtitle" id="archiveTooltipSub">Category Details</div>
-            <div class="archive-tooltip__divider"></div>
-            <div class="archive-tooltip__date" id="archiveTooltipDate">20/08/2026</div>
-            <div class="archive-tooltip__org" id="archiveTooltipOrg">Duration: 1 week</div>
-            <div class="archive-tooltip__stack" id="archiveTooltipStack">HTML, Javascript, ECharts, GSAP</div>
-          </div>
-        </div>
-
         <div class="archive-gallery-wrapper" id="archiveGalleryWrapper">
           <div class="archive-gallery-track" id="archiveGalleryTrack"></div>
         </div>
       </div>
     </div>
+
+    <!-- Floating info card -->
+    <div class="hero-info-card" id="heroInfoCard">
+      <span class="hero-info-card__icon" id="heroCardIcon" aria-hidden="true"></span>
+      <div class="hero-info-card__content">
+        <p id="heroCardDesc">Using the understanding of systems and data, I design holistic visualisations and infographics for various projects.</p>
+        <h4>Some projects,</h4>
+        <ul id="heroCardLinks">
+          <li><a href="/project.html">Intermission // ITC</a></li>
+          <li><a href="/undersea-cables.html">Undersea Cables</a></li>
+          <li><a href="/airtel.html">Intermission // Airtel</a></li>
+          <li><a href="/lightrock.html">Investment Chart</a></li>
+          <li><a href="/revenue-growth.html">Revenue Growth</a></li>
+        </ul>
+      </div>
+    </div>
   </section>
+
+  <!-- ============ WORK SECTION ============ -->
+  <section id="works" class="section work-section">
+
+    <div class="section-header-block">
+      <h2 class="section-title" id="work-title">WORK</h2>
+      <p class="section-subtitle">Working as a designer and artist, it creates a idea.</p>
+    </div>
+
+    <h3 class="section-label">Featured</h3>
+
+    <!-- Text-only grid (featured.png reference) - full-bleed width via
+         .featured-grid's negative-margin breakout below. Cursor is
+         entirely custom (see #featuredCursor + js/main.js): native
+         pointer hidden the whole time you're over the grid, showing a
+         plain arrow badge by default and swapping to a small dot +
+         that card's own cover image (data-cover) while over a
+         specific card. -->
+    <!-- Three size tiers, in DOM order so the grid's default auto-flow
+         (css/work.css) places them correctly with no per-card
+         grid-column/row needed beyond --big's own span: 1 big (the
+         lead case study, carrying the rotating badge that used to sit
+         on Packaging) -> 4 medium (the other real case studies) -> 4
+         small (archive-only extras, no dedicated page). -->
+    <div class="featured-grid" id="featuredGrid">
+      <a href="/project.html" class="featured-card featured-card--big" data-cover="images/project/00-cover.png">
+        <span class="featured-card__label">Visual Journalism</span>
+        <h4 class="featured-card__title">Intermission // ITC</h4>
+        <p class="featured-card__desc">How a colonial cigarette company became one of India's most valuable conglomerates.</p>
+        <span class="featured-card__spinner" aria-hidden="true">
+          <svg viewBox="0 0 100 100">
+            <defs><path id="featuredSpinPath" d="M 50,50 m -38,0 a 38,38 0 1,1 76,0 a 38,38 0 1,1 -76,0"/></defs>
+            <text font-size="8.5" letter-spacing="2" fill="currentColor">
+              <textPath href="#featuredSpinPath">FEATURED &#8226; FEATURED &#8226; FEATURED &#8226; </textPath>
+            </text>
+          </svg>
+        </span>
+      </a>
+
+      <a href="/undersea-cables.html" class="featured-card featured-card--medium" data-cover="images/undersea-cables/00-cover.png">
+        <span class="featured-card__label">Visual Journalism</span>
+        <h4 class="featured-card__title">Undersea Cables</h4>
+        <p class="featured-card__desc">Meta's new India cable, and the fragile network holding up the country's internet.</p>
+      </a>
+
+      <a href="/airtel.html" class="featured-card featured-card--medium" data-cover="images/airtel/00-cover.png">
+        <span class="featured-card__label">Visual Journalism</span>
+        <h4 class="featured-card__title">Intermission // Airtel</h4>
+        <p class="featured-card__desc">How Bharti Airtel survived price wars and Reliance to become a $100bn+ company.</p>
+      </a>
+
+      <a href="/lightrock.html" class="featured-card featured-card--medium" data-cover="images/lightrock/00-cover.png">
+        <span class="featured-card__label">Visual Journalism</span>
+        <h4 class="featured-card__title">Investment Chart</h4>
+        <p class="featured-card__desc">A royal family's billion-dollar bet on Indian startups — without a winner.</p>
+      </a>
+
+      <a href="/revenue-growth.html" class="featured-card featured-card--medium" data-cover="images/revenue-growth/00-cover.png">
+        <span class="featured-card__label">Visual Journalism</span>
+        <h4 class="featured-card__title">Revenue Growth</h4>
+        <p class="featured-card__desc">At RBI-licensed NBFCs, 600% annual interest is board-approved and perfectly legal.</p>
+      </a>
+
+      <a href="#" class="featured-card featured-card--small" data-cover="images/archive/03.png">
+        <span class="featured-card__label">Graphic Design</span>
+        <h4 class="featured-card__title">Packaging — Baarbara Coffee</h4>
+        <p class="featured-card__desc">Coffee packaging design.</p>
+      </a>
+
+      <a href="#" class="featured-card featured-card--small" data-cover="images/archive/17.png">
+        <span class="featured-card__label">Game Design</span>
+        <h4 class="featured-card__title">Zelda — A Breath of Fresh Wind</h4>
+        <p class="featured-card__desc">Deep dive into the design of Breath of the Wild.</p>
+      </a>
+
+      <a href="#" class="featured-card featured-card--small" data-cover="images/archive/04.png">
+        <span class="featured-card__label">Creatives</span>
+        <h4 class="featured-card__title">Fabled Ciphers</h4>
+        <p class="featured-card__desc">Created as part of the Inktober challenge.</p>
+      </a>
+
+      <a href="#" class="featured-card featured-card--small" data-cover="images/archive/29.png">
+        <span class="featured-card__label">Web Development</span>
+        <h4 class="featured-card__title">Bird Map</h4>
+        <p class="featured-card__desc">Using eBird data to map the migration patterns of 5 birds in Bangalore.</p>
+      </a>
+    </div>
+
+  </section>
+
+  <!-- Custom cursor for the Featured grid (js/main.js) - hidden until
+       .is-visible (anywhere over #featuredGrid); .is-card additionally
+       swaps the arrow badge for a small dot + the hovered card's own
+       cover image. -->
+  <div class="featured-cursor" id="featuredCursor" aria-hidden="true">
+    <div class="featured-cursor__arrow">
+      <svg viewBox="0 0 24 24">
+        <line x1="7" y1="17" x2="17" y2="7"></line>
+        <polyline points="8 7 17 7 17 16"></polyline>
+      </svg>
+    </div>
+    <div class="featured-cursor__dot"></div>
+    <div class="featured-cursor__preview"><img id="featuredCursorImg" src="" alt="" onerror="this.style.opacity=0"></div>
+  </div>
 
   <!-- ============ CONTACT + FOOTER SECTION ============ -->
   <section id="connect" class="section contact-section">
@@ -220,20 +244,18 @@
     </div>
 
     <div class="contact-details">
-      <a class="contact-details__line" href="tel:+910000000000">+91 00000 00000</a>
-      <a class="contact-details__line" href="mailto:hello@anujdebnath.com">hello@anujdebnath.com</a>
+      <a class="contact-details__line" href="tel:+919874608128">+91 98746 08128</a>
+      <a class="contact-details__line" href="mailto:anujdebnath246@gmail.com">anujdebnath246@gmail.com</a>
     </div>
 
     <div class="contact-social-row">
-      <a class="link-arrow" href="#" target="_blank" rel="noopener">Instagram &#8599;</a>
-      <a class="link-arrow" href="#" target="_blank" rel="noopener">Telegram &#8599;</a>
-      <a class="link-arrow" href="#" target="_blank" rel="noopener">Facebook &#8599;</a>
+      <a class="link-arrow" href="https://www.instagram.com/codegarden.space/" target="_blank" rel="noopener">Instagram &#8599;</a>
+      <a class="link-arrow" href="https://medium.com/@radioactivesugar" target="_blank" rel="noopener">Medium &#8599;</a>
     </div>
 
     <div class="footer-columns">
       <ul class="footer-nav">
-        <li><a class="footer-nav__link" href="/portfolio/aboutme.html">About Me</a></li>
-        <li><a class="footer-nav__link" href="#">Services</a></li>
+        <li><a class="footer-nav__link" href="/aboutme.html">About Me</a></li>
         <li><a class="footer-nav__link" href="#works">Works</a></li>
       </ul>
 
@@ -245,9 +267,9 @@
     </div>
 
     <div class="footer-links-row">
-      <a class="footer-links-row__link" href="#" target="_blank" rel="noopener">[ Dribbble ]</a>
-      <a class="footer-links-row__link" href="#" target="_blank" rel="noopener">[ Behance ]</a>
-      <a class="footer-links-row__link" href="#" target="_blank" rel="noopener">[ LinkedIn ]</a>
+      <a class="footer-links-row__link" href="https://radioactive-sugar.itch.io/" target="_blank" rel="noopener">[ itch.io ]</a>
+      <a class="footer-links-row__link" href="https://www.behance.net/anujdebnat6978" target="_blank" rel="noopener">[ Behance ]</a>
+      <a class="footer-links-row__link" href="https://www.linkedin.com/in/anuj-debnath-150407163/" target="_blank" rel="noopener">[ LinkedIn ]</a>
     </div>
 
     <h2 class="footer-wordmark" id="footer-wordmark">ANUJ DEBNATH</h2>
@@ -259,8 +281,8 @@
     <span class="footer-bottom__copyright">2026 All Rights Reserved. Anuj Debnath. Any reproduction, distribution, or use of the materials without permission is prohibited.</span>
   </div>
 
-  <script src="/portfolio/js/common.js"></script>
-  <script src="/portfolio/js/timeline-data.js"></script>
-  <script src="/portfolio/js/main.js"></script>
+  <script src="/js/common.js"></script>
+  <script src="/js/timeline-data.js"></script>
+  <script src="/js/main.js"></script>
 </body>
 </html>
